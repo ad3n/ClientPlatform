@@ -2,24 +2,17 @@
 
 namespace Bisnis;
 
-use Ihsan\Client\Platform\Event\FilterController;
 use Ihsan\Client\Platform\Http\Kernel;
-use Ihsan\Client\Platform\Http\KernelEvents;
 use Ihsan\Client\Platform\Middleware\ApiClientMiddleware;
 use Ihsan\Client\Platform\Middleware\ConfigurationMiddleware;
 use Ihsan\Client\Platform\Middleware\EventDispatcherMiddleware;
 use Ihsan\Client\Platform\Middleware\MiddlewareFactory;
 use Ihsan\Client\Platform\Middleware\RouterMiddleware;
 use Ihsan\Client\Platform\Middleware\TemplatingMiddleware;
-use Ihsan\Client\Platform\Template\TemplateEngineInterface;
-use Ihsan\Client\Platform\Template\TwigTemplateEngine;
 use Stack\Builder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Symfony\Component\Routing\Route;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>

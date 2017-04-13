@@ -2,7 +2,6 @@
 
 namespace Ihsan\Client\Platform\Http;
 
-use Ihsan\Client\Platform\Controller\ControllerResolver;
 use Ihsan\Client\Platform\Event\FilterController;
 use Ihsan\Client\Platform\Event\FilterResponse;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -11,8 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
