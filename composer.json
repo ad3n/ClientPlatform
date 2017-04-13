@@ -1,4 +1,16 @@
 {
+    "name": "api-platform/api-platform",
+    "license": "MIT",
+    "type": "library",
+    "description": "The Web Api Client Framework",
+    "homepage": "https://github.com/ad3n/ClientPlatform",
+    "authors": [
+        {
+            "name": "Muhammad Surya Ihsanuddin",
+            "email": "surya.kejawen@gmail.com",
+            "homepage": "https://github.com/ad3n"
+        }
+    ],
     "require": {
         "symfony/http-foundation": "~3.0",
         "symfony/http-kernel": "~3.0",
