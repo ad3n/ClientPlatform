@@ -30,8 +30,8 @@ class RouterMiddleware implements HttpKernelInterface
 
     /**
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
      *
      * @return Response
      */
@@ -52,6 +52,10 @@ class RouterMiddleware implements HttpKernelInterface
         return $this->app->handle($request, $type, $catch);
     }
 
+    /**
+     * @param RouteCollection $router
+     * @param array           $config
+     */
     private function buildRoute(RouteCollection $router, array $config)
     {
         if (!key_exists('controller', $config)) {

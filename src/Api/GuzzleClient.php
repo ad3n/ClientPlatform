@@ -41,7 +41,7 @@ class GuzzleClient implements ClientInterface
         $this->options = array(
             'headers' => array(
                 'Authorization' => sprintf('Bearer %s', $token),
-            )
+            ),
         );
     }
 
@@ -67,6 +67,7 @@ class GuzzleClient implements ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function get($url, array $options = array())
@@ -81,6 +82,7 @@ class GuzzleClient implements ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function post($url, array $options = array())
@@ -95,6 +97,7 @@ class GuzzleClient implements ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function put($url, array $options = array())
@@ -109,6 +112,7 @@ class GuzzleClient implements ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete($url, array $options = array())
@@ -122,6 +126,7 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param array $options
+     *
      * @return array
      */
     private function mergeOptions(array $options)

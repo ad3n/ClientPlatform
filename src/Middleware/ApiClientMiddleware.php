@@ -28,8 +28,8 @@ class ApiClientMiddleware implements HttpKernelInterface
 
     /**
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
      *
      * @return Response
      */

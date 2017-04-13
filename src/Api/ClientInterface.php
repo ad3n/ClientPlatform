@@ -16,6 +16,7 @@ interface ClientInterface
 
     /**
      * @param mixed $key
+     *
      * @return mixed
      */
     public function fetch($key);
@@ -29,6 +30,7 @@ interface ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return ResponseInterface
      */
     public function get($url, array $options = array());
@@ -36,6 +38,7 @@ interface ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return ResponseInterface
      */
     public function post($url, array $options = array());
@@ -43,6 +46,7 @@ interface ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return ResponseInterface
      */
     public function put($url, array $options = array());
@@ -50,6 +54,7 @@ interface ClientInterface
     /**
      * @param $url
      * @param array $options
+     *
      * @return ResponseInterface
      */
     public function delete($url, array $options = array());

@@ -23,6 +23,7 @@ trait ApiClientAwareTrait
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function get($url, array $options)
@@ -33,6 +34,7 @@ trait ApiClientAwareTrait
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function post($url, array $options)
@@ -43,6 +45,7 @@ trait ApiClientAwareTrait
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function put($url, array $options)
@@ -53,6 +56,7 @@ trait ApiClientAwareTrait
     /**
      * @param $url
      * @param array $options
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete($url, array $options)

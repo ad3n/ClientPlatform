@@ -23,7 +23,7 @@ class ConfigurationMiddleware implements HttpKernelInterface
 
     /**
      * @param HttpKernelInterface $app
-     * @param array $configs
+     * @param array               $configs
      */
     public function __construct(HttpKernelInterface $app, array $configs)
     {
@@ -33,8 +33,8 @@ class ConfigurationMiddleware implements HttpKernelInterface
 
     /**
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
      *
      * @return Response
      */

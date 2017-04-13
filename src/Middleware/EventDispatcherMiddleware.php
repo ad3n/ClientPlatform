@@ -24,7 +24,7 @@ class EventDispatcherMiddleware implements HttpKernelInterface
 
     /**
      * @param HttpKernelInterface $app
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcher     $eventDispatcher
      */
     public function __construct(HttpKernelInterface $app, EventDispatcher $eventDispatcher)
     {
@@ -34,8 +34,8 @@ class EventDispatcherMiddleware implements HttpKernelInterface
 
     /**
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
      *
      * @return Response
      */
@@ -60,7 +60,7 @@ class EventDispatcherMiddleware implements HttpKernelInterface
     }
 
     /**
-     * @param string $event
+     * @param string   $event
      * @param callable $callback
      */
     private function attach($event, $callback)

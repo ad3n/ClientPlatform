@@ -6,7 +6,6 @@ use Ihsan\Client\Platform\Http\Kernel;
 use Ihsan\Client\Platform\Middleware\ApiClientMiddleware;
 use Ihsan\Client\Platform\Middleware\ConfigurationMiddleware;
 use Ihsan\Client\Platform\Middleware\EventDispatcherMiddleware;
-use Ihsan\Client\Platform\Middleware\MiddlewareFactory;
 use Ihsan\Client\Platform\Middleware\RouterMiddleware;
 use Ihsan\Client\Platform\Middleware\TemplatingMiddleware;
 use Stack\Builder;
@@ -58,8 +57,8 @@ class Bootstrap
 
     /**
      * @param string $middleware
-     * @param array $parameters
-     * @param int $priority
+     * @param array  $parameters
+     * @param int    $priority
      */
     private function addMiddleware($middleware, array $parameters = array(), $priority = 0)
     {
@@ -68,7 +67,7 @@ class Bootstrap
 
     /**
      * @param Request $request
-     * @param array $configs
+     * @param array   $configs
      *
      * @return Response
      */

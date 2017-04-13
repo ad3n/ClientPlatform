@@ -31,8 +31,9 @@ class Kernel implements HttpKernelInterface
 
     /**
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
+     *
      * @return Response
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
