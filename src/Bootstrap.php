@@ -75,7 +75,7 @@ class Bootstrap
      */
     private function addMiddleware($middleware, array $parameters = [], $priority = 0)
     {
-        $this->middlewares->insert(array_merge([$middleware, $this->container], $parameters), $priority);
+        $this->middlewares->insert(array_merge([$middleware], $parameters), $priority);
     }
 
     /**

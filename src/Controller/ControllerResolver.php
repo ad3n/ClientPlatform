@@ -57,6 +57,10 @@ class ControllerResolver
         unset($controllerNotation);
 
         $class = implode('\\', $controller);
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" is not exist.', $class));
+        }
+
         $implements = class_implements($class);
         if (!array_key_exists(ControllerInterface::class, $implements)) {
             throw new \InvalidArgumentException(sprintf('"%s" must implement "%s"', $class, ControllerInterface::class));

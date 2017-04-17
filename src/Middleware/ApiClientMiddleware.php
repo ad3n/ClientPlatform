@@ -38,7 +38,7 @@ class ApiClientMiddleware implements HttpKernelInterface, ContainerAwareMiddlewa
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
         $configurations = [];
-        if (empty($configs = $this->container['config'])) {
+        if (!empty($configs = $this->container['config'])) {
             $configurations = $configs;
         }
 
