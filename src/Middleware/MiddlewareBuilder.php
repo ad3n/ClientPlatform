@@ -73,10 +73,10 @@ class MiddlewareBuilder
             }
 
             array_unshift($middlewares, $app);
-        }
 
-        if ($app instanceof ContainerAwareMiddlewareInterface) {
-            $app->setContainer($this->container);
+            if ($app instanceof ContainerAwareMiddlewareInterface) {
+                $app->setContainer($this->container);
+            }
         }
 
         return new StackedHttpKernel($app, $middlewares);
