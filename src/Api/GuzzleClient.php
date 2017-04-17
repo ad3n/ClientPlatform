@@ -52,7 +52,7 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param mixed $key
-     * @param null  $default
+     * @param mixed $default
      *
      * @return mixed
      */

@@ -16,10 +16,11 @@ interface ClientInterface
 
     /**
      * @param mixed $key
+     * @param mixed $default
      *
      * @return mixed
      */
-    public function fetch($key);
+    public function fetch($key, $default = null);
 
     /**
      * @param mixed $key

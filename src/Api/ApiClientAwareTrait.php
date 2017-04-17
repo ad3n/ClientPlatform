@@ -23,6 +23,32 @@ trait ApiClientAwareTrait
     }
 
     /**
+     * @param string $token
+     */
+    public function bearer($token)
+    {
+        $this->client->bearer($token);
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function store($key, $value)
+    {
+        $this->client->store($key, $value);
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $default
+     */
+    public function fetch($key, $default = null)
+    {
+        $this->client->fetch($key, $default);
+    }
+
+    /**
      * @param $url
      * @param array $options
      *
