@@ -2,8 +2,6 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
-use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
-use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Ihsan\Client\Platform\Template\TemplatingAwareInterface;
 use Ihsan\Client\Platform\Template\TwigTemplateEngine;
 use Symfony\Component\HttpFoundation\Request;

@@ -2,8 +2,6 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
-use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
-use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;

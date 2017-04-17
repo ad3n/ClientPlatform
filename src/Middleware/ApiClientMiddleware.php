@@ -2,8 +2,6 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
-use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
-use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Ihsan\Client\Platform\Api\ApiClientAwareInterface;
 use Ihsan\Client\Platform\Api\GuzzleClient;
 use Symfony\Component\HttpFoundation\Request;
