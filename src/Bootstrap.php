@@ -1,12 +1,12 @@
 <?php
 
-namespace Ihsan\Client\Platform\Api;
+namespace Ihsan\Client\Platform;
 
-use Bisnis\Middleware\MiddlewareBuilder;
 use Ihsan\Client\Platform\Http\Kernel;
 use Ihsan\Client\Platform\Middleware\ApiClientMiddleware;
 use Ihsan\Client\Platform\Middleware\ConfigurationMiddleware;
 use Ihsan\Client\Platform\Middleware\EventDispatcherMiddleware;
+use Ihsan\Client\Platform\Middleware\MiddlewareBuilder;
 use Ihsan\Client\Platform\Middleware\RouterMiddleware;
 use Ihsan\Client\Platform\Middleware\TemplatingMiddleware;
 use Pimple\Container;

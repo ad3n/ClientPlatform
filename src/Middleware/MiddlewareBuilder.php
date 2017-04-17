@@ -1,6 +1,6 @@
 <?php
 
-namespace Bisnis\Middleware;
+namespace Ihsan\Client\Platform\Middleware;
 
 use Pimple\Container;
 use Stack\StackedHttpKernel;
