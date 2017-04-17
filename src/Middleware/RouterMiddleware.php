@@ -2,6 +2,8 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
+use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
+use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Ihsan\Client\Platform\Controller\ControllerResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +15,10 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class RouterMiddleware implements HttpKernelInterface
+class RouterMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
 {
+    use ContainerAwareMiddlewareTrait;
+
     /**
      * @var HttpKernelInterface
      */
@@ -37,9 +41,12 @@ class RouterMiddleware implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = $request->attributes->get('_config', array());
-        $router = new RouteCollection();
+        $configurations = [];
+        if (empty($configs = $this->container['config'])) {
+            $configurations = $configs;
+        }
 
+        $router = new RouteCollection();
         if (array_key_exists('routes', $configurations)) {
             foreach ($configurations['routes'] as $route) {
                 $this->buildRoute($router, $route);
@@ -67,9 +74,9 @@ class RouterMiddleware implements HttpKernelInterface
         }
 
         if (!key_exists('methods', $config)) {
-            $config['methods'] = array();
+            $config['methods'] = [];
         }
 
-        $router->add($config['controller'], new Route($config['path'], array(), array(), array(), '', array(), $config['methods']));
+        $router->add($config['controller'], new Route($config['path'], [], [], [], '', [], $config['methods']));
     }
 }

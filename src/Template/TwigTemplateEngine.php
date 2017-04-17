@@ -29,9 +29,9 @@ class TwigTemplateEngine implements TemplateEngineInterface
         }
 
         $loader = new \Twig_Loader_Filesystem($templatePath);
-        $this->engine = new \Twig_Environment($loader, array(
+        $this->engine = new \Twig_Environment($loader, [
             'cache' => $cachePath,
-        ));
+        ]);
     }
 
     /**
@@ -40,7 +40,7 @@ class TwigTemplateEngine implements TemplateEngineInterface
      *
      * @return string
      */
-    public function render($view, array $variables = array())
+    public function render($view, array $variables = [])
     {
         return $this->engine->render($view, $variables);
     }
@@ -51,7 +51,7 @@ class TwigTemplateEngine implements TemplateEngineInterface
      *
      * @return Response
      */
-    public function renderResponse($view, array $variables = array())
+    public function renderResponse($view, array $variables = [])
     {
         return new Response($this->render($view, $variables));
     }

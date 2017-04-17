@@ -2,7 +2,7 @@
 
 namespace Ihsan\Client\Platform\Api;
 
-use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
@@ -25,37 +25,37 @@ interface ClientInterface
      * @param mixed $key
      * @param mixed $value
      */
-    public function save($key, $value);
+    public function store($key, $value);
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return ResponseInterface
+     * @return Response
      */
-    public function get($url, array $options = array());
+    public function get($url, array $options = []);
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return ResponseInterface
+     * @return Response
      */
-    public function post($url, array $options = array());
+    public function post($url, array $options = []);
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return ResponseInterface
+     * @return Response
      */
-    public function put($url, array $options = array());
+    public function put($url, array $options = []);
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return ResponseInterface
+     * @return Response
      */
-    public function delete($url, array $options = array());
+    public function delete($url, array $options = []);
 }

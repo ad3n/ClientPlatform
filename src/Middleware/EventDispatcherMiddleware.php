@@ -2,6 +2,8 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
+use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
+use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,8 +12,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class EventDispatcherMiddleware implements HttpKernelInterface
+class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
 {
+    use ContainerAwareMiddlewareTrait;
+
     /**
      * @var HttpKernelInterface
      */
@@ -41,7 +45,10 @@ class EventDispatcherMiddleware implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = $request->attributes->get('_config', array());
+        $configurations = [];
+        if (empty($configs = $this->container['config'])) {
+            $configurations = $configs;
+        }
 
         if (array_key_exists('event_listeners', $configurations)) {
             foreach ($configurations['event_listeners'] as $config) {

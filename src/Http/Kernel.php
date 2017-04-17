@@ -60,7 +60,7 @@ class Kernel implements HttpKernelInterface
             $request->attributes->remove('_controller');
             $request->attributes->remove('_action');
             $request->attributes->remove('_config');
-            $parameters = $request->attributes->get('_parameters', array());
+            $parameters = $request->attributes->get('_parameters', []);
             if (!empty($parameters)) {
                 $request->attributes->remove('_parameters');
             }
@@ -68,7 +68,7 @@ class Kernel implements HttpKernelInterface
             $filterController = new FilterController($controller);
             $this->eventDispatcher->dispatch(KernelEvents::FILTER_CONTROLLER, $filterController);
 
-            $response = call_user_func_array(array($controller, $action), array_merge($parameters, array($request)));
+            $response = call_user_func_array([$controller, $action], array_merge($parameters, [$request]));
         } catch (ResourceNotFoundException $e) {
             $response = new Response('Not found!', Response::HTTP_NOT_FOUND);
         }

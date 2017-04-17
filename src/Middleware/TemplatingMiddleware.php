@@ -2,6 +2,8 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
+use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
+use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Ihsan\Client\Platform\Template\TemplatingAwareInterface;
 use Ihsan\Client\Platform\Template\TwigTemplateEngine;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,8 +13,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class TemplatingMiddleware implements HttpKernelInterface
+class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
 {
+    use ContainerAwareMiddlewareTrait;
+
     /**
      * @var HttpKernelInterface
      */
@@ -35,7 +39,10 @@ class TemplatingMiddleware implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = $request->attributes->get('_config', array());
+        $configurations = [];
+        if (empty($configs = $this->container['config'])) {
+            $configurations = $configs;
+        }
 
         if (array_key_exists('template', $configurations)) {
             $path = null;

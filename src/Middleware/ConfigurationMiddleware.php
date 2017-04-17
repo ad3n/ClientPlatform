@@ -2,6 +2,8 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
+use Bisnis\Middleware\ContainerAwareMiddlewareInterface;
+use Bisnis\Middleware\ContainerAwareMiddlewareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -9,8 +11,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class ConfigurationMiddleware implements HttpKernelInterface
+class ConfigurationMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
 {
+    use ContainerAwareMiddlewareTrait;
+
     /**
      * @var HttpKernelInterface
      */
@@ -40,7 +44,7 @@ class ConfigurationMiddleware implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $request->attributes->add(array('_config' => $this->configs));
+        $this->container['config'] = $this->configs;
 
         return $this->app->handle($request, $type, $catch);
     }

@@ -2,6 +2,8 @@
 
 namespace Ihsan\Client\Platform\Api;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
@@ -24,7 +26,7 @@ trait ApiClientAwareTrait
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function get($url, array $options)
     {
@@ -35,7 +37,7 @@ trait ApiClientAwareTrait
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function post($url, array $options)
     {
@@ -46,7 +48,7 @@ trait ApiClientAwareTrait
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function put($url, array $options)
     {
@@ -57,7 +59,7 @@ trait ApiClientAwareTrait
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function delete($url, array $options)
     {

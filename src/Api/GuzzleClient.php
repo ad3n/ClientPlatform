@@ -4,6 +4,8 @@ namespace Ihsan\Client\Platform\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -24,13 +26,16 @@ class GuzzleClient implements ClientInterface
     /**
      * @var array
      */
-    private $options = array();
+    private $options = [];
 
-    public function __construct()
+    /**
+     * @param Session $session
+     * @param null    $baseUrl
+     */
+    public function __construct(Session $session, $baseUrl = null)
     {
-        $this->session = new Session();
-        $this->session->start();
-        $this->guzzle = new Client();
+        $this->session = $session;
+        $this->guzzle = new Client(['base_uri' => $baseUrl]);
     }
 
     /**
@@ -47,19 +52,20 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param mixed $key
+     * @param null  $default
      *
      * @return mixed
      */
-    public function fetch($key)
+    public function fetch($key, $default = null)
     {
-        return $this->session->get($key);
+        return $this->session->get($key, $default);
     }
 
     /**
      * @param mixed $key
      * @param mixed $value
      */
-    public function save($key, $value)
+    public function store($key, $value)
     {
         $this->session->set($key, $value);
     }
@@ -68,60 +74,68 @@ class GuzzleClient implements ClientInterface
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function get($url, array $options = array())
+    public function get($url, array $options = [])
     {
         try {
-            return $this->guzzle->get($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->get($url, $this->mergeOptions($options));
         } catch (RequestException $exception) {
-            return $exception->getResponse();
+            $requestResponse = $exception->getResponse();
         }
+
+        return $this->convertToSymfonyResponse($requestResponse);
     }
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function post($url, array $options = array())
+    public function post($url, array $options = [])
     {
         try {
-            return $this->guzzle->post($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->post($url, $this->mergeOptions($options));
         } catch (RequestException $exception) {
-            return $exception->getResponse();
+            $requestResponse = $exception->getResponse();
         }
+
+        return $this->convertToSymfonyResponse($requestResponse);
     }
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function put($url, array $options = array())
+    public function put($url, array $options = [])
     {
         try {
-            return $this->guzzle->put($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->put($url, $this->mergeOptions($options));
         } catch (RequestException $exception) {
-            return $exception->getResponse();
+            $requestResponse = $exception->getResponse();
         }
+
+        return $this->convertToSymfonyResponse($requestResponse);
     }
 
     /**
      * @param $url
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function delete($url, array $options = array())
+    public function delete($url, array $options = [])
     {
         try {
-            return $this->guzzle->delete($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->delete($url, $this->mergeOptions($options));
         } catch (RequestException $exception) {
-            return $exception->getResponse();
+            $requestResponse = $exception->getResponse();
         }
+
+        return $this->convertToSymfonyResponse($requestResponse);
     }
 
     /**
@@ -137,6 +151,20 @@ class GuzzleClient implements ClientInterface
             $options = array_merge($options, $this->options);
         }
 
-        return $options;
+        return array_merge($options, $this->fetch('_request_options', []));
+    }
+
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return Response
+     */
+    private function convertToSymfonyResponse(ResponseInterface $response)
+    {
+        return new Response(
+            $response->getBody(),
+            $response->getStatusCode(),
+            $response->getHeaders()
+        );
     }
 }

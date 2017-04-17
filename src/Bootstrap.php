@@ -1,17 +1,19 @@
 <?php
 
-namespace Bisnis;
+namespace Ihsan\Client\Platform\Api;
 
+use Bisnis\Middleware\MiddlewareBuilder;
 use Ihsan\Client\Platform\Http\Kernel;
 use Ihsan\Client\Platform\Middleware\ApiClientMiddleware;
 use Ihsan\Client\Platform\Middleware\ConfigurationMiddleware;
 use Ihsan\Client\Platform\Middleware\EventDispatcherMiddleware;
 use Ihsan\Client\Platform\Middleware\RouterMiddleware;
 use Ihsan\Client\Platform\Middleware\TemplatingMiddleware;
-use Stack\Builder;
+use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
@@ -19,9 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 class Bootstrap
 {
     /**
-     * @var Builder
+     * @var MiddlewareBuilder
      */
-    private $stackPhp;
+    private $middlewareBuilder;
 
     /**
      * @var \SplPriorityQueue
@@ -29,19 +31,26 @@ class Bootstrap
     private $middlewares;
 
     /**
-     * @param array $middlewares
+     * @var Container
      */
-    public function __construct(array $middlewares = array())
+    private $container;
+
+    /**
+     * @param Container $container
+     * @param array     $middlewares
+     */
+    public function __construct(Container $container, array $middlewares = [])
     {
-        $this->stackPhp = new Builder();
+        $this->middlewareBuilder = new MiddlewareBuilder($container);
         $this->middlewares = new \SplPriorityQueue();
+        $this->container = $container;
 
         foreach ($middlewares as $middleware) {
             if (array_key_exists('class', $middleware)) {
                 throw new \OutOfRangeException('index "class" not found.');
             }
 
-            $parameters = array();
+            $parameters = [];
             $priority = 0;
             if (array_key_exists('parameters', $middleware) && is_array($middleware['parameters'])) {
                 $parameters = $middleware['parameters'];
@@ -53,6 +62,10 @@ class Bootstrap
 
             $this->addMiddleware($middleware['class'], $parameters, $priority);
         }
+
+        $this->container['session'] = function (Container $container) {
+            return new Session();
+        };
     }
 
     /**
@@ -60,9 +73,9 @@ class Bootstrap
      * @param array  $parameters
      * @param int    $priority
      */
-    private function addMiddleware($middleware, array $parameters = array(), $priority = 0)
+    private function addMiddleware($middleware, array $parameters = [], $priority = 0)
     {
-        $this->middlewares->insert(array_merge(array($middleware), $parameters), $priority);
+        $this->middlewares->insert(array_merge([$middleware, $this->container], $parameters), $priority);
     }
 
     /**
@@ -76,17 +89,17 @@ class Bootstrap
         $eventDipatcher = new EventDispatcher();
         $kernel = new Kernel($eventDipatcher, $configs);
 
-        $this->addMiddleware(ConfigurationMiddleware::class, array($configs), 2049);
-        $this->addMiddleware(RouterMiddleware::class, array(), 2047);
-        $this->addMiddleware(EventDispatcherMiddleware::class, array($eventDipatcher), 2047);
-        $this->addMiddleware(TemplatingMiddleware::class, array(), 2045);
-        $this->addMiddleware(ApiClientMiddleware::class, array(), 2043);
+        $this->addMiddleware(ConfigurationMiddleware::class, [$configs], 2049);
+        $this->addMiddleware(RouterMiddleware::class, [], 2047);
+        $this->addMiddleware(EventDispatcherMiddleware::class, [$eventDipatcher], 2047);
+        $this->addMiddleware(TemplatingMiddleware::class, [], 2045);
+        $this->addMiddleware(ApiClientMiddleware::class, [], 2043);
 
         foreach ($this->middlewares as $middleware) {
-            call_user_func_array(array($this->stackPhp, 'push'), $middleware);
+            call_user_func_array([$this->middlewareBuilder, 'push'], $middleware);
         }
 
-        $app = $this->stackPhp->resolve($kernel);
+        $app = $this->middlewareBuilder->resolve($kernel);
         $response = $app->handle($request);
 
         return $response->send();
