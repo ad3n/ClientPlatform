@@ -28,6 +28,11 @@ use Symfony\Component\Routing\RouteCollection;
 abstract class Bootstrap extends Container
 {
     /**
+     * @var bool
+     */
+    private $booted = false;
+
+    /**
      * @return string
      */
     abstract protected function projectDir();
@@ -43,6 +48,10 @@ abstract class Bootstrap extends Container
      */
     public function boot($configDir, array $configFiles)
     {
+        if ($this->booted) {
+            throw new \RuntimeException(sprintf('Application is booted.'));
+        }
+
         $cacheDir = $this->cacheDir();
         $this['internal.cache_handler'] = function ($container) use ($cacheDir) {
             return new CacheHandler($cacheDir);
@@ -89,6 +98,8 @@ abstract class Bootstrap extends Container
         $container['internal.session'] = function ($container) {
             return new Session();
         };
+
+        $this->booted = true;
     }
 
     /**
