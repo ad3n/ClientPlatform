@@ -43,8 +43,8 @@ class ApiClientMiddleware implements HttpKernelInterface, ContainerAwareMiddlewa
         }
 
         $baseUrl = null;
-        if (array_key_exists('api_url', $configurations)) {
-            $baseUrl = $configurations['api_url'];
+        if (array_key_exists('base_url', $configurations)) {
+            $baseUrl = $configurations['base_url'];
         }
 
         if (array_key_exists('http_client', $configurations)) {

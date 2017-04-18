@@ -47,14 +47,14 @@ class Configuration implements ConfigurationInterface
         }
 
         foreach ($this->configs as $config) {
-            $configs = array_merge($configs, Yaml::parse($config));
+            $configs = array_merge($configs, Yaml::parse(file_get_contents($config)));
         }
 
         $processor = new Processor();
-        $configs = $processor->processConfiguration($this, $configs);;
-        $cache->write($reflection, $configs);
+        $configs = $processor->processConfiguration($this, $configs);
+        $cache->write($reflection, $configs['app']);
 
-        $contianer['config'] = $configs;
+        $contianer['config'] = $configs['app'];
     }
 
     /**
@@ -83,6 +83,16 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('base_url')->defaultValue(null)->end()
+                ->arrayNode('middlewares')
+                    ->defaultValue([])
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('class')->end()
+                            ->scalarNode('parameters')->end()
+                            ->scalarNode('priority')->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('route')
                     ->isRequired()
                     ->cannotBeEmpty()

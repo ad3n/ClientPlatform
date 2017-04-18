@@ -59,7 +59,6 @@ class Kernel implements HttpKernelInterface
 
             $request->attributes->remove('_controller');
             $request->attributes->remove('_action');
-            $request->attributes->remove('_config');
             $parameters = $request->attributes->get('_parameters', []);
             if (!empty($parameters)) {
                 $request->attributes->remove('_parameters');

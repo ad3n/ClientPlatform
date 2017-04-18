@@ -58,7 +58,7 @@ class CacheHandler
      */
     public function has(\ReflectionClass $reflectionClass)
     {
-        if (file_exists($this->load($reflectionClass))) {
+        if (file_exists($this->fetch($reflectionClass))) {
             return true;
         }
 
@@ -82,6 +82,6 @@ class CacheHandler
      */
     private function getCacheFile(\ReflectionClass $reflectionClass)
     {
-        return sprintf('%s/%s.php.cache', $this->cacheDir, $reflectionClass->getName());
+        return sprintf('%s/%s.php.cache', $this->cacheDir, str_replace('\\', '_', $reflectionClass->getName()));
     }
 }
