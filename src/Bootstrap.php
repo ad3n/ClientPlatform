@@ -109,9 +109,9 @@ abstract class Bootstrap extends Container
         };
 
         $this['internal.template'] = function ($container) {
-            $configurations = $configs = $container['config'];
-            $viewPath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['path']);
-            $cachePath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['cache_dir']);
+            $config = $container['config'];
+            $viewPath = sprintf('%s%s', $config['project_dir'], $config['template']['path']);
+            $cachePath = sprintf('%s%s', $config['project_dir'], $config['template']['cache_dir']);
 
             return new TwigTemplateEngine($viewPath, $cachePath);
         };
@@ -126,9 +126,9 @@ abstract class Bootstrap extends Container
      */
     public function handle(Request $request)
     {
-        $configurations = $this['config'];
-        $configurations = array_merge($configurations, ['project_dir' => $this->projectDir()]);
-        $this['config'] = $configurations;
+        $config = $this['config'];
+        $config = array_merge($config, ['project_dir' => $this->projectDir()]);
+        $this['config'] = $config;
 
         /** @var MiddlewareBuilder $middlewareBuilder */
         $middlewareBuilder = $this['internal.middleware_builder'];

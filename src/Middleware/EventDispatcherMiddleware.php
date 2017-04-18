@@ -41,10 +41,10 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = $this->container['config'];
+        $config = $this->container['config'];
         $this->eventDispatcher = $this->container['internal.event_dispatcher'];
 
-        foreach ($configurations['event_listeners'] as $config) {
+        foreach ($config['event_listeners'] as $config) {
             if ($service = isset($this->container[$config['class']])) {
                 $class = $service;
             } else {
