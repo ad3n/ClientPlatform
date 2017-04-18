@@ -13,6 +13,7 @@ use Ihsan\Client\Platform\Middleware\MiddlewareBuilder;
 use Ihsan\Client\Platform\Middleware\MiddlewareStack;
 use Ihsan\Client\Platform\Middleware\RouterMiddleware;
 use Ihsan\Client\Platform\Middleware\TemplatingMiddleware;
+use Ihsan\Client\Platform\Template\TwigTemplateEngine;
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,31 +73,47 @@ abstract class Bootstrap extends Container
             return new ControllerResolver($container['internal.url_matcher']);
         };
 
-        $container['internal.event_dispatcher'] = function ($container) {
+        $this['internal.event_dispatcher'] = function ($container) {
             return new EventDispatcher();
         };
 
-        $container['internal.middleware_builder'] = function ($container) {
+        $this['internal.kernel'] = function ($container) {
+            return new Kernel($container['internal.event_dispatcher']);
+        };
+
+        $this['internal.middleware_builder'] = function ($container) {
             return new MiddlewareBuilder();
         };
 
-        $container['internal.request_context'] = function ($container) {
+        $this['internal.middleware_stack'] = function ($container) {
+            return new MiddlewareStack($container);
+        };
+
+        $this['internal.request_context'] = function ($container) {
             return new RequestContext();
         };
 
-        $container['internal.route_collection'] = function ($container) {
+        $this['internal.route_collection'] = function ($container) {
             return new RouteCollection();
         };
 
-        $container['internal.url_matcher'] = function ($container) {
+        $this['internal.url_matcher'] = function ($container) {
             return new UrlMatcher(
                 $container['internal.route_collection'],
                 $container['internal.request_context']
             );
         };
 
-        $container['internal.session'] = function ($container) {
+        $this['internal.session'] = function ($container) {
             return new Session();
+        };
+
+        $this['internal.template'] = function ($container) {
+            $configurations = $configs = $container['config'];
+            $viewPath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['path']);
+            $cachePath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['cache_dir']);
+
+            return new TwigTemplateEngine($viewPath, $cachePath);
         };
 
         $this->booted = true;
@@ -113,12 +130,6 @@ abstract class Bootstrap extends Container
         $configurations = array_merge($configurations, ['project_dir' => $this->projectDir()]);
         $this['config'] = $configurations;
 
-        /** @var EventDispatcher $eventDipatcher */
-        $eventDipatcher = $this['internal.event_dispatcher'];
-        $kernel = new Kernel($eventDipatcher);
-
-        $middlewareStack = new MiddlewareStack($this);
-
         /** @var MiddlewareBuilder $middlewareBuilder */
         $middlewareBuilder = $this['internal.middleware_builder'];
         $middlewareBuilder->addMiddleware(RouterMiddleware::class, [], 2047);
@@ -126,11 +137,13 @@ abstract class Bootstrap extends Container
         $middlewareBuilder->addMiddleware(TemplatingMiddleware::class, [], 2045);
         $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);
 
+        /** @var MiddlewareStack $middlewareStack */
+        $middlewareStack = $this['internal.middleware_stack'];
         foreach ($middlewareBuilder->getMiddlewares() as $middleware) {
             call_user_func_array([$middlewareStack, 'push'], $middleware);
         }
 
-        $app = $middlewareStack->resolve($kernel);
+        $app = $middlewareStack->resolve($this['internal.kernel']);
         $response = $app->handle($request);
 
         return $response->send();
