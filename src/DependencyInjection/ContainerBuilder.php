@@ -27,54 +27,5 @@ class ContainerBuilder
      */
     public static function build($configDir, array $configFiles)
     {
-        $container = new Container();
-
-        $container['internal.cache_handler'] = function ($container) {
-            return new CacheHandler();
-        };
-
-        // Process Configuration
-        $configuration = new Configuration($configDir);
-        foreach ($configFiles as $configFile) {
-            $configuration->addResource($configFile);
-        }
-        $configuration->process($container);
-
-        $container['internal.http_client'] = function ($container) {
-            return new GuzzleClient($container['internal.session'], $container['config']['base_url']);
-        };
-
-        $container['internal.controller_resolver'] = function ($container) {
-            return new ControllerResolver($container['internal.url_matcher']);
-        };
-
-        $container['internal.event_dispatcher'] = function ($container) {
-            return new EventDispatcher();
-        };
-
-        $container['internal.middleware_builder'] = function ($container) {
-            return new MiddlewareBuilder();
-        };
-
-        $container['internal.request_context'] = function ($container) {
-            return new RequestContext();
-        };
-
-        $container['internal.route_collection'] = function ($container) {
-            return new RouteCollection();
-        };
-
-        $container['internal.url_matcher'] = function ($container) {
-            return new UrlMatcher(
-                $container['internal.route_collection'],
-                $container['internal.request_context']
-            );
-        };
-
-        $container['internal.session'] = function ($container) {
-            return new Session();
-        };
-
-        return $container;
     }
 }
