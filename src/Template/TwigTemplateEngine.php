@@ -21,11 +21,11 @@ class TwigTemplateEngine implements TemplateEngineInterface
     public function __construct($templatePath = null, $cachePath = null)
     {
         if (null === $templatePath) {
-            $templatePath = __DIR__.'/../var/views';
+            $templatePath = '/views';
         }
 
         if (null === $cachePath) {
-            $cachePath = __DIR__.'/../var/cache';
+            $cachePath = sys_get_temp_dir();
         }
 
         $loader = new \Twig_Loader_Filesystem($templatePath);

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -40,13 +41,18 @@ class RouterMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareI
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
         $configurations = $this->container['config'];
-        $router = new RouteCollection();
+        $router = $this->container['internal.route_collection'];
         foreach ($configurations['routes'] as $route) {
             $this->buildRoute($router, $route);
         }
 
-        $controllerResolver = new ControllerResolver($router, $request);
-        $request->attributes->add($controllerResolver->resolve($request->getPathInfo()));
+        /** @var RequestContext $requestContext */
+        $requestContext = $this->container['internal.request_context'];
+        $requestContext->fromRequest($request);
+
+        /** @var ControllerResolver $controllerResolver */
+        $controllerResolver = $this->container['internal.controller_resolver'];
+        $request->attributes->add($controllerResolver->resolve($request));
 
         return $this->app->handle($request, $type, $catch);
     }

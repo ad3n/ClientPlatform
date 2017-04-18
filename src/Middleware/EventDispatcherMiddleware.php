@@ -26,12 +26,10 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
 
     /**
      * @param HttpKernelInterface $app
-     * @param EventDispatcher     $eventDispatcher
      */
-    public function __construct(HttpKernelInterface $app, EventDispatcher $eventDispatcher)
+    public function __construct(HttpKernelInterface $app)
     {
         $this->app = $app;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -44,12 +42,11 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
         $configurations = $this->container['config'];
-
-        if (array_key_exists('event_listeners', $configurations)) {
-            foreach ($configurations['event_listeners'] as $config) {
-                $this->attach($config['event'], $config['listener']);
-            }
+        foreach ($configurations['event_listeners'] as $config) {
+            $this->attach($config['event'], $config['listener']);
         }
+
+        $this->eventDispatcher = $this->container['internal.event_dispatcher'];
 
         return $this->app->handle($request, $type, $catch);
     }

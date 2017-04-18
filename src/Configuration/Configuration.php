@@ -38,7 +38,8 @@ class Configuration implements ConfigurationInterface
     public function process(Container $contianer)
     {
         $configs = [];
-        $cache = new CacheHandler();
+        /** @var CacheHandler $cache */
+        $cache = $contianer['internal.cache_handler'];
         $reflection = new \ReflectionObject($this);
         if ($cache->has($reflection)) {
             $contianer['config'] = $cache->fetch($reflection);

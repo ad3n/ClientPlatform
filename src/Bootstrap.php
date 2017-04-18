@@ -36,14 +36,16 @@ abstract class Bootstrap
         $configurations = array_merge($configurations, ['project_dir' => $this->projectDir()]);
         $container['config'] = $configurations;
 
-        $eventDipatcher = new EventDispatcher();
+        /** @var EventDispatcher $eventDipatcher */
+        $eventDipatcher = $container['internal.event_dispatcher'];
         $kernel = new Kernel($eventDipatcher);
 
-        $middlewareBuilder = new MiddlewareBuilder();
         $middlewareStack = new MiddlewareStack($container);
 
+        /** @var MiddlewareBuilder $middlewareBuilder */
+        $middlewareBuilder = $container['internal.middleware_builder'];
         $middlewareBuilder->addMiddleware(RouterMiddleware::class, [], 2047);
-        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, [$eventDipatcher], 2047);
+        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, 2047);
         $middlewareBuilder->addMiddleware(TemplatingMiddleware::class, [], 2045);
         $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);
 

@@ -4,8 +4,6 @@ namespace Ihsan\Client\Platform\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
@@ -18,30 +16,21 @@ class ControllerResolver
     private $urlMatcher;
 
     /**
-     * @var Request
+     * @param UrlMatcher $urlMatcher
      */
-    private $request;
-
-    /**
-     * @param RouteCollection $routeCollection
-     * @param Request         $request
-     */
-    public function __construct(RouteCollection $routeCollection, Request $request)
+    public function __construct(UrlMatcher $urlMatcher)
     {
-        $requestContext = new RequestContext();
-        $requestContext->fromRequest($request);
-        $this->urlMatcher = new UrlMatcher($routeCollection, $requestContext);
-        $this->request = $request;
+        $this->urlMatcher = $urlMatcher;
     }
 
     /**
-     * @param $path
+     * @param Request $request
      *
      * @return array
      */
-    public function resolve($path)
+    public function resolve(Request $request)
     {
-        $attributes = $this->urlMatcher->match($path);
+        $attributes = $this->urlMatcher->match($request->getPathInfo());
         $controllerNotation = explode('@', $attributes['_route']);
         unset($attributes['_route']);
 
