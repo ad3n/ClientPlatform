@@ -43,20 +43,10 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = [];
-        if (!empty($configs = $this->container['config'])) {
-            $configurations = $configs;
-        }
+        $configurations = $this->container['config'];
 
         if (array_key_exists('event_listeners', $configurations)) {
             foreach ($configurations['event_listeners'] as $config) {
-                if (!key_exists('event', $config)) {
-                    throw new \OutOfBoundsException(sprintf('Key "event" must be set in "filter" key.'));
-                }
-                if (!key_exists('listener', $config)) {
-                    throw new \OutOfBoundsException(sprintf('Key "listener" must be set in "filter" key.'));
-                }
-
                 $this->attach($config['event'], $config['listener']);
             }
         }

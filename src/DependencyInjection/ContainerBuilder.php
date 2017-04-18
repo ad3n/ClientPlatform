@@ -15,7 +15,7 @@ class ContainerBuilder
 {
     /**
      * @param string $configDir
-     * @param array $configs
+     * @param array  $configs
      *
      * @return Container
      */

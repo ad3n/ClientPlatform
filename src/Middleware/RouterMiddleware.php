@@ -39,16 +39,10 @@ class RouterMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareI
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = [];
-        if (!empty($configs = $this->container['config'])) {
-            $configurations = $configs;
-        }
-
+        $configurations = $this->container['config'];
         $router = new RouteCollection();
-        if (array_key_exists('routes', $configurations)) {
-            foreach ($configurations['routes'] as $route) {
-                $this->buildRoute($router, $route);
-            }
+        foreach ($configurations['routes'] as $route) {
+            $this->buildRoute($router, $route);
         }
 
         $controllerResolver = new ControllerResolver($router, $request);

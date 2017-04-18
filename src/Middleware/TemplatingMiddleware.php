@@ -37,28 +37,15 @@ class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlew
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $configurations = [];
-        if (!empty($configs = $this->container['config'])) {
-            $configurations = $configs;
-        }
+        $configurations = $configs = $this->container['config'];
 
-        if (array_key_exists('template', $configurations)) {
-            $path = null;
-            $cache = null;
+        $viewPath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['path']);
+        $cachePath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['cache']);
 
-            if (array_key_exists('path', $configurations['template'])) {
-                $path = $configurations['template']['path'];
-            }
-
-            if (array_key_exists('cache', $configurations['template'])) {
-                $cache = $configurations['template']['cache'];
-            }
-
-            $templateEngine = new TwigTemplateEngine($path, $cache);
-            $controller = $request->attributes->get('_controller');
-            if ($controller instanceof TemplatingAwareInterface) {
-                $controller->setTemplateEngine($templateEngine);
-            }
+        $templateEngine = new TwigTemplateEngine($viewPath, $cachePath);
+        $controller = $request->attributes->get('_controller');
+        if ($controller instanceof TemplatingAwareInterface) {
+            $controller->setTemplateEngine($templateEngine);
         }
 
         return $this->app->handle($request, $type, $catch);
