@@ -15,17 +15,17 @@ class ContainerBuilder
 {
     /**
      * @param string $configDir
-     * @param array  $configs
+     * @param array  $configFiles
      *
      * @return Container
      */
-    public static function build($configDir, array $configs)
+    public static function build($configDir, array $configFiles)
     {
         $container = new Container();
 
         $configuration = new Configuration($configDir);
-        foreach ($configs as $config) {
-            $configuration->addResource($config);
+        foreach ($configFiles as $configFile) {
+            $configuration->addResource($configFile);
         }
         $configuration->process($container);
 

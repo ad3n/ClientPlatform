@@ -40,7 +40,7 @@ class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlew
         $configurations = $configs = $this->container['config'];
 
         $viewPath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['path']);
-        $cachePath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['cache']);
+        $cachePath = sprintf('%s%s', $configurations['project_dir'], $configurations['template']['cache_dir']);
 
         $templateEngine = new TwigTemplateEngine($viewPath, $cachePath);
         $controller = $request->attributes->get('_controller');
