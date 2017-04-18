@@ -29,15 +29,16 @@ class ContainerBuilder
     {
         $container = new Container();
 
+        $container['internal.cache_handler'] = function ($container) {
+            return new CacheHandler();
+        };
+
+        // Process Configuration
         $configuration = new Configuration($configDir);
         foreach ($configFiles as $configFile) {
             $configuration->addResource($configFile);
         }
         $configuration->process($container);
-
-        $container['internal.cache_handler'] = function ($container) {
-            return new CacheHandler();
-        };
 
         $container['internal.http_client'] = function ($container) {
             return new GuzzleClient($container['internal.session'], $container['config']['base_url']);
