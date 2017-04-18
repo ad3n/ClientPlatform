@@ -71,10 +71,11 @@ class RouterMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareI
             throw new InvalidParameterException(sprintf('"path" must be set.'));
         }
 
-        if (!key_exists('methods', $config)) {
-            $config['methods'] = [];
+        $methods = [];
+        if (key_exists('methods', $config) && !empty($config['methods'])) {
+            $methods = $config['methods'];
         }
 
-        $router->add($config['controller'], new Route($config['path'], [], [], [], '', [], $config['methods']));
+        $router->add($config['controller'], new Route($config['path'], [], [], [], '', [], $methods));
     }
 }
