@@ -17,8 +17,13 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class Bootstrap
+abstract class Bootstrap
 {
+    /**
+     * @return string
+     */
+    abstract protected function projectDir();
+
     /**
      * @param Request   $request
      * @param Container $container
@@ -27,6 +32,10 @@ class Bootstrap
      */
     public function handle(Request $request, Container $container)
     {
+        $configurations = $container['config'];
+        $configurations = array_merge($configurations, ['project_dir' => $this->projectDir()]);
+        $container['config'] = $configurations;
+
         $eventDipatcher = new EventDispatcher();
         $kernel = new Kernel($eventDipatcher);
 

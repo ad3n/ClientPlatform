@@ -58,7 +58,7 @@ class CacheHandler
      */
     public function has(\ReflectionClass $reflectionClass)
     {
-        if (file_exists($this->fetch($reflectionClass))) {
+        if (file_exists($this->getCacheFile($reflectionClass))) {
             return true;
         }
 
@@ -72,7 +72,7 @@ class CacheHandler
      */
     public function fetch(\ReflectionClass $reflectionClass)
     {
-        return $this->getCacheFile($reflectionClass);
+        return require $this->getCacheFile($reflectionClass);
     }
 
     /**

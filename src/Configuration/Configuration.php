@@ -52,9 +52,9 @@ class Configuration implements ConfigurationInterface
 
         $processor = new Processor();
         $configs = $processor->processConfiguration($this, $configs);
-        $cache->write($reflection, $configs['app']);
+        $cache->write($reflection, $configs);
 
-        $contianer['config'] = $configs['app'];
+        $contianer['config'] = $configs;
     }
 
     /**
@@ -93,7 +93,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('route')
+                ->arrayNode('routes')
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('array')

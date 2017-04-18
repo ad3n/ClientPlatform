@@ -23,18 +23,17 @@ class ContainerBuilder
     {
         $container = new Container();
 
+        $configuration = new Configuration($configDir);
+        foreach ($configs as $config) {
+            $configuration->addResource($config);
+        }
+        $configuration->process($container);
+
         $container['internal.cache_handler'] = function ($container) {
             return new CacheHandler();
         };
 
-        $container['internal.configuration'] = function ($container) use ($configDir, $configs) {
-            $configuration = new Configuration($configDir);
-            foreach ($configs as $config) {
-                $configuration->addResource($config);
-            }
-
-            $configuration->process($container);
-
+        $container['internal.configuration'] = function ($container) use ($configuration) {
             return $configuration;
         };
 
