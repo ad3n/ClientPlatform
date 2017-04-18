@@ -45,7 +45,7 @@ abstract class Bootstrap
         /** @var MiddlewareBuilder $middlewareBuilder */
         $middlewareBuilder = $container['internal.middleware_builder'];
         $middlewareBuilder->addMiddleware(RouterMiddleware::class, [], 2047);
-        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, 2047);
+        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, [], 2047);
         $middlewareBuilder->addMiddleware(TemplatingMiddleware::class, [], 2045);
         $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);
 
