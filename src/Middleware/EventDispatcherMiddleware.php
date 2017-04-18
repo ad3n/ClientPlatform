@@ -43,7 +43,13 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
     {
         $configurations = $this->container['config'];
         foreach ($configurations['event_listeners'] as $config) {
-            $this->attach($config['event'], $config['listener']);
+            if ($service = $this->container[$config['class']]) {
+                $class = $service;
+            } else {
+                $class = $config['class'];
+            }
+
+            $this->attach($config['event'], [$class, $config['method']], $config['priority']);
         }
 
         $this->eventDispatcher = $this->container['internal.event_dispatcher'];
@@ -54,13 +60,14 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
     /**
      * @param string   $event
      * @param callable $callback
+     * @param int      $priority
      */
-    private function attach($event, $callback)
+    private function attach($event, $callback, $priority = 0)
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException(sprintf('"%s" is not callable.'));
         }
 
-        $this->eventDispatcher->addListener($event, $callback);
+        $this->eventDispatcher->addListener($event, $callback, $priority);
     }
 }

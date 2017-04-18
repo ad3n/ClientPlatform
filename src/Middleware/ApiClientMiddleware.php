@@ -3,7 +3,6 @@
 namespace Ihsan\Client\Platform\Middleware;
 
 use Ihsan\Client\Platform\Api\ApiClientAwareInterface;
-use Ihsan\Client\Platform\Api\GuzzleClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
