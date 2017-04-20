@@ -11,7 +11,7 @@ Add `composer.json`
 ```json
 {
     "require": {
-        "ad3n/client-platform": "~0.1"
+        "ad3n/client-platform": "~1.0"
     },
     "autoload": {
         "psr-4": {
