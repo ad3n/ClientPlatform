@@ -108,7 +108,7 @@ class HomeController extends AbstractController
 
 ```
 
-You can read `Ihsan\Client\Platform\Controller\AbstractController.php` to get more information about controller.
+For more information about controller, please read [`Ihsan\Client\Platform\Controller\AbstractController.php`](src/Controller/AbstractController.php)
 
 ### Configuration
 
