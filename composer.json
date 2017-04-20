@@ -15,6 +15,7 @@
         "guzzlehttp/guzzle": "~6.2",
         "pimple/pimple": "~3.0",
         "stack/builder": "^1.0",
+        "symfony/cache": "~3.0",
         "symfony/config": "~3.0",
         "symfony/event-dispatcher": "~3.0",
         "symfony/http-foundation": "~3.0",

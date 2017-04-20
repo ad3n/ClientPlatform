@@ -59,7 +59,7 @@ class TwigTemplateEngine implements TemplateEngineInterface
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function addGlobal($name, $value)
     {

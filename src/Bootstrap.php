@@ -4,7 +4,6 @@ namespace Ihsan\Client\Platform;
 
 use Ihsan\Client\Platform\Api\ApiClientMiddleware;
 use Ihsan\Client\Platform\Api\GuzzleClient;
-use Ihsan\Client\Platform\Cache\CacheHandler;
 use Ihsan\Client\Platform\Configuration\Configuration;
 use Ihsan\Client\Platform\Controller\ControllerResolver;
 use Ihsan\Client\Platform\Event\EventDispatcherMiddleware;
@@ -15,6 +14,7 @@ use Ihsan\Client\Platform\Middleware\MiddlewareStack;
 use Ihsan\Client\Platform\Template\TemplatingMiddleware;
 use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Pimple\Container;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +55,7 @@ abstract class Bootstrap extends Container
 
         $cacheDir = $this->cacheDir();
         $this['internal.cache_handler'] = function ($container) use ($cacheDir) {
-            return new CacheHandler($cacheDir);
+            return new FilesystemAdapter('ihsan_client_platform', 0, $cacheDir);
         };
 
         // Process Configuration

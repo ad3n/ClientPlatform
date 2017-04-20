@@ -2,8 +2,8 @@
 
 namespace Ihsan\Client\Platform\Configuration;
 
-use Ihsan\Client\Platform\Cache\CacheHandler;
 use Pimple\Container;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
@@ -38,11 +38,11 @@ class Configuration implements ConfigurationInterface
     public function process(Container $contianer)
     {
         $configs = [];
-        /** @var CacheHandler $cache */
+        /** @var CacheItemPoolInterface $cache */
         $cache = $contianer['internal.cache_handler'];
-        $reflection = new \ReflectionObject($this);
-        if ($cache->has($reflection)) {
-            $contianer['config'] = $cache->fetch($reflection);
+        $item = __CLASS__;
+        if ($cache->hasItem($item)) {
+            $contianer['config'] = $cache->getItem($item)->get();
 
             return;
         }
@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
 
         $processor = new Processor();
         $configs = $processor->processConfiguration($this, $configs);
-        $cache->write($reflection, $configs);
+        $cache->save($cache->getItem($item)->set($configs));
 
         $contianer['config'] = $configs;
     }
