@@ -22,19 +22,41 @@ Add `composer.json`
 
 ```
 
-Create configuration file
+Create configuration file `config.yml`
+
+```yaml
+app:
+    base_url: 'abc'
+    routes:
+        - { path: '/{a}/{b}', controller: 'Bisnis:HomeController@index', methods: ['GET'] }
+    template:
+        path: '/var/views'
+        cache_dir: '/var/cache'
+# Aktifkan jika ingin mencoba kerja event listenernya
+#    event_listeners:
+#        - { event: 'kernel.request', class: 'Bisnis\EventListener\TestListener', method: 'test' }
+```
+
+Create application class `Application.php`
 
 ```php
 <?php
 
-return array(
-    'routes' => array(
-        array(
-            'path' => '/',
-            'controller' => 'App:HomeController@index',
-        ),
-    ),
-);
+namespace App;
+
+use Ihsan\Client\Platform\Bootstrap;
+
+class Application extends Bootstrap
+{
+    /**
+     * @return string
+     */
+    protected function projectDir()
+    {
+        return __DIR__.'/..';
+    }
+}
+
 ```
 
 Create Front Controller aka `index.php`
@@ -44,18 +66,21 @@ Create Front Controller aka `index.php`
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Ihsan\Client\Platform\Bootstrap;
-use Pimple\Container;
+use App\Application;
 use Symfony\Component\HttpFoundation\Request;
+
+$configDir = __DIR__.'/../app/config';
+$configFiles = ['loader.yml'];
 
 $request = Request::createFromGlobals();
 
-$app = new Bootstrap(new Container());
-$app->handle($request, require __DIR__.'/../app/config/config.php');
+$app = new Application();
+$app->boot($configDir, $configFiles);
+$app->handle($request);
 
 ```
 
-Create Controller
+Create Controller `HomeController.php`
 
 ```php
 <?php
@@ -82,3 +107,9 @@ class HomeController extends AbstractController
 }
 
 ```
+
+You can read `Ihsan\Client\Platform\Controller\AbstractController.php` to get more information about controller.
+
+### Configuration
+
+For more information about configuration, please read `Ihsan\Client\Platform\Configuration\Configuration.php#L78-L166` [src/Configuration/Configuration.php#L78-L166]
