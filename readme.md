@@ -112,4 +112,4 @@ You can read `Ihsan\Client\Platform\Controller\AbstractController.php` to get mo
 
 ### Configuration
 
-For more information about configuration, please read `Ihsan\Client\Platform\Configuration\Configuration.php#L78-L166` (src/Configuration/Configuration.php#L78-L166)
+For more information about configuration, please read [`Ihsan\Client\Platform\Configuration\Configuration.php#L78-L166`](src/Configuration/Configuration.php#L78-L166)
