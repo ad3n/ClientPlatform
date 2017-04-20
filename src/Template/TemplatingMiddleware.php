@@ -39,7 +39,7 @@ class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlew
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $templateClass = $this->container['template_engine'];
+        $templateClass = $this->container['template']['engine'];
         if ($templateClass) {
             $viewPath = sprintf('%s%s', $this->container['project_dir'], $this->container['template']['path']);
             $cachePath = sprintf('%s%s', $this->container['project_dir'], $this->container['template']['cache_dir']);
