@@ -14,6 +14,7 @@ use Ihsan\Client\Platform\Middleware\MiddlewareStack;
 use Ihsan\Client\Platform\Template\TemplatingMiddleware;
 use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Pimple\Container;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,14 +35,29 @@ abstract class Bootstrap extends Container
     private $booted = false;
 
     /**
+     * @var AdapterInterface
+     */
+    private $cacheAdapter;
+
+    /**
      * @return string
      */
     abstract protected function projectDir();
 
     /**
-     * @return string
+     * @param AdapterInterface|null $cacheAdapter
+     * @param array                 $values
      */
-    abstract protected function cacheDir();
+    public function __construct(AdapterInterface $cacheAdapter = null, array $values = array())
+    {
+        parent::__construct($values);
+
+        if (null === $cacheAdapter) {
+            $this->cacheAdapter = new FilesystemAdapter();
+        }
+
+        $this['project_dir'] = $this->projectDir();
+    }
 
     /**
      * @param string $configDir
@@ -53,9 +69,9 @@ abstract class Bootstrap extends Container
             throw new \RuntimeException(sprintf('Application is booted.'));
         }
 
-        $cacheDir = $this->cacheDir();
-        $this['internal.cache_handler'] = function ($container) use ($cacheDir) {
-            return new FilesystemAdapter('ihsan_client_platform', 0, $cacheDir);
+        $cacheAdapter = $this->cacheAdapter;
+        $this['internal.cache_handler'] = function ($container) use ($cacheAdapter) {
+            return $cacheAdapter;
         };
 
         // Process Configuration
@@ -66,7 +82,7 @@ abstract class Bootstrap extends Container
         $configuration->process($this);
 
         $this['internal.http_client'] = function ($container) {
-            return new GuzzleClient($container['internal.session'], $container['config']['base_url']);
+            return new GuzzleClient($container['internal.session'], $container['base_url']);
         };
 
         $this['internal.controller_resolver'] = function ($container) {
@@ -109,9 +125,8 @@ abstract class Bootstrap extends Container
         };
 
         $this['internal.template'] = function ($container) {
-            $config = $container['config'];
-            $viewPath = sprintf('%s%s', $config['project_dir'], $config['template']['path']);
-            $cachePath = sprintf('%s%s', $config['project_dir'], $config['template']['cache_dir']);
+            $viewPath = sprintf('%s%s', $container['project_dir'], $container['template']['path']);
+            $cachePath = sprintf('%s%s', $container['project_dir'], $container['template']['cache_dir']);
 
             return new TwigTemplateEngine($viewPath, $cachePath);
         };
@@ -126,10 +141,6 @@ abstract class Bootstrap extends Container
      */
     public function handle(Request $request)
     {
-        $config = $this['config'];
-        $config = array_merge($config, ['project_dir' => $this->projectDir()]);
-        $this['config'] = $config;
-
         /** @var MiddlewareBuilder $middlewareBuilder */
         $middlewareBuilder = $this['internal.middleware_builder'];
         $middlewareBuilder->addMiddleware(RoutingMiddleware::class, [], 2047);

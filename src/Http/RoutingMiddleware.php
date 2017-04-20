@@ -42,9 +42,8 @@ class RoutingMiddleware implements HttpKernelInterface, ContainerAwareMiddleware
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $config = $this->container['config'];
         $router = $this->container['internal.route_collection'];
-        foreach ($config['routes'] as $route) {
+        foreach ($this->container['routes'] as $route) {
             $this->buildRoute($router, $route);
         }
 

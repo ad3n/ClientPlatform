@@ -40,9 +40,9 @@ class Configuration implements ConfigurationInterface
         $configs = [];
         /** @var CacheItemPoolInterface $cache */
         $cache = $contianer['internal.cache_handler'];
-        $item = __CLASS__;
+        $item = str_replace('\\', '_', __CLASS__);
         if ($cache->hasItem($item)) {
-            $contianer['config'] = $cache->getItem($item)->get();
+            $this->merge($contianer, $cache->getItem($item)->get());
 
             return;
         }
@@ -55,7 +55,7 @@ class Configuration implements ConfigurationInterface
         $configs = $processor->processConfiguration($this, $configs);
         $cache->save($cache->getItem($item)->set($configs));
 
-        $contianer['config'] = $configs;
+        $this->merge($contianer, $cache->getItem($item)->get());
     }
 
     /**
@@ -151,5 +151,16 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $treeBuilder;
+    }
+
+    /**
+     * @param Container $container
+     * @param array     $configs
+     */
+    private function merge(Container $container, array $configs)
+    {
+        foreach ($configs as $key => $value) {
+            $container[$key] = $value;
+        }
     }
 }

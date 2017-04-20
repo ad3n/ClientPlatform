@@ -37,11 +37,11 @@ class ApiClientMiddleware implements HttpKernelInterface, ContainerAwareMiddlewa
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $config = $this->container['config'];
-        if ($config['http_client']) {
-            $httpClient = new $config['http_client'](
+        $clientClass = $this->container['http_client'];
+        if ($clientClass) {
+            $httpClient = new $clientClass(
                 $this->container['internal.session'],
-                $this->container['config']['base_url']
+                $this->container['base_url']
             );
         } else {
             $httpClient = $this->container['internal.http_client'];

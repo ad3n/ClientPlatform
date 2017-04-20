@@ -39,12 +39,12 @@ class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlew
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $config = $this->container['config'];
-        if ($config['template_engine']) {
-            $viewPath = sprintf('%s%s', $config['project_dir'], $config['template']['path']);
-            $cachePath = sprintf('%s%s', $config['project_dir'], $config['template']['cache_dir']);
+        $templateClass = $this->container['template_engine'];
+        if ($templateClass) {
+            $viewPath = sprintf('%s%s', $this->container['project_dir'], $this->container['template']['path']);
+            $cachePath = sprintf('%s%s', $this->container['project_dir'], $this->container['template']['cache_dir']);
 
-            $templateEngine = new $config['template_engine']($viewPath, $cachePath);
+            $templateEngine = new $templateClass($viewPath, $cachePath);
         } else {
             /** @var TwigTemplateEngine $templateEngine */
             $templateEngine = $this->container['internal.template'];
