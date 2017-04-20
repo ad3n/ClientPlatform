@@ -28,13 +28,13 @@ Create configuration file `config.yml`
 app:
     base_url: 'abc'
     routes:
-        - { path: '/{a}/{b}', controller: 'Bisnis:HomeController@index', methods: ['GET'] }
+        - { path: '/{a}/{b}', controller: 'App:HomeController@index', methods: ['GET'] }
     template:
         path: '/var/views'
         cache_dir: '/var/cache'
 # Aktifkan jika ingin mencoba kerja event listenernya
 #    event_listeners:
-#        - { event: 'kernel.request', class: 'Bisnis\EventListener\TestListener', method: 'test' }
+#        - { event: 'kernel.request', class: 'App\EventListener\FilterRequestListener', method: 'filter' }
 ```
 
 Create application class `Application.php`
