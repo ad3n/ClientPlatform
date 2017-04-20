@@ -85,6 +85,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('base_url')->defaultValue(null)->end()
                 ->scalarNode('http_client')->defaultValue(null)->end()
+                ->scalarNode('template_engine')->defaultValue(null)->end()
                 ->arrayNode('middlewares')
                     ->defaultValue([])
                     ->prototype('array')

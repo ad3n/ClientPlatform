@@ -1,8 +1,9 @@
 <?php
 
-namespace Ihsan\Client\Platform\Middleware;
+namespace Ihsan\Client\Platform\Api;
 
-use Ihsan\Client\Platform\Api\ApiClientAwareInterface;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -38,7 +39,10 @@ class ApiClientMiddleware implements HttpKernelInterface, ContainerAwareMiddlewa
     {
         $config = $this->container['config'];
         if ($config['http_client']) {
-            $httpClient = $config['http_client'];
+            $httpClient = new $config['http_client'](
+                $this->container['internal.session'],
+                $this->container['config']['base_url']
+            );
         } else {
             $httpClient = $this->container['internal.http_client'];
         }

@@ -2,18 +2,18 @@
 
 namespace Ihsan\Client\Platform;
 
+use Ihsan\Client\Platform\Api\ApiClientMiddleware;
 use Ihsan\Client\Platform\Api\GuzzleClient;
 use Ihsan\Client\Platform\Cache\CacheHandler;
 use Ihsan\Client\Platform\Configuration\Configuration;
 use Ihsan\Client\Platform\Controller\ControllerResolver;
+use Ihsan\Client\Platform\Event\EventDispatcherMiddleware;
 use Ihsan\Client\Platform\Http\Kernel;
-use Ihsan\Client\Platform\Middleware\ApiClientMiddleware;
-use Ihsan\Client\Platform\Middleware\EventDispatcherMiddleware;
+use Ihsan\Client\Platform\Http\RoutingMiddleware;
 use Ihsan\Client\Platform\Middleware\MiddlewareBuilder;
 use Ihsan\Client\Platform\Middleware\MiddlewareStack;
-use Ihsan\Client\Platform\Middleware\RouterMiddleware;
-use Ihsan\Client\Platform\Middleware\TemplatingMiddleware;
-use Ihsan\Client\Platform\Template\TwigTemplateEngine;
+use Ihsan\Client\Platform\Template\TemplatingMiddleware;
+use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +45,7 @@ abstract class Bootstrap extends Container
 
     /**
      * @param string $configDir
-     * @param array $configFiles
+     * @param array  $configFiles
      */
     public function boot($configDir, array $configFiles)
     {
@@ -120,7 +120,7 @@ abstract class Bootstrap extends Container
     }
 
     /**
-     * @param Request   $request
+     * @param Request $request
      *
      * @return Response
      */
@@ -132,7 +132,7 @@ abstract class Bootstrap extends Container
 
         /** @var MiddlewareBuilder $middlewareBuilder */
         $middlewareBuilder = $this['internal.middleware_builder'];
-        $middlewareBuilder->addMiddleware(RouterMiddleware::class, [], 2047);
+        $middlewareBuilder->addMiddleware(RoutingMiddleware::class, [], 2047);
         $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, [], 2047);
         $middlewareBuilder->addMiddleware(TemplatingMiddleware::class, [], 2045);
         $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);

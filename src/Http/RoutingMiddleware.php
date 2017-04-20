@@ -1,8 +1,10 @@
 <?php
 
-namespace Ihsan\Client\Platform\Middleware;
+namespace Ihsan\Client\Platform\Http;
 
 use Ihsan\Client\Platform\Controller\ControllerResolver;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -14,7 +16,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class RouterMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
+class RoutingMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
 {
     use ContainerAwareMiddlewareTrait;
 

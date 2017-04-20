@@ -1,7 +1,8 @@
 <?php
 
-namespace Ihsan\Client\Platform\Template;
+namespace Ihsan\Client\Platform\Twig;
 
+use Ihsan\Client\Platform\Template\TemplateEngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -54,5 +55,22 @@ class TwigTemplateEngine implements TemplateEngineInterface
     public function renderResponse($view, array $variables = [])
     {
         return new Response($this->render($view, $variables));
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function addGlobal($name, $value)
+    {
+        $this->engine->addGlobal($name, $value);
+    }
+
+    /**
+     * @param \Twig_ExtensionInterface $extension
+     */
+    public function addExtension(\Twig_ExtensionInterface $extension)
+    {
+        $this->engine->addExtension($extension);
     }
 }

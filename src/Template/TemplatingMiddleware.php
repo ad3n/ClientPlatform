@@ -1,9 +1,11 @@
 <?php
 
-namespace Ihsan\Client\Platform\Middleware;
+namespace Ihsan\Client\Platform\Template;
 
-use Ihsan\Client\Platform\Template\TemplatingAwareInterface;
-use Ihsan\Client\Platform\Template\TwigTemplateEngine;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
+use Ihsan\Client\Platform\Twig\TwigFilterExtension;
+use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -37,7 +39,18 @@ class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlew
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $templateEngine = $this->container['internal.template'];
+        $config = $this->container['config'];
+        if ($config['template_engine']) {
+            $viewPath = sprintf('%s%s', $config['project_dir'], $config['template']['path']);
+            $cachePath = sprintf('%s%s', $config['project_dir'], $config['template']['cache_dir']);
+
+            $templateEngine = new $config['template_engine']($viewPath, $cachePath);
+        } else {
+            /** @var TwigTemplateEngine $templateEngine */
+            $templateEngine = $this->container['internal.template'];
+            $templateEngine->addExtension(new TwigFilterExtension());
+        }
+
         $controller = $request->attributes->get('_controller');
         if ($controller instanceof TemplatingAwareInterface) {
             $controller->setTemplateEngine($templateEngine);

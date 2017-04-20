@@ -1,7 +1,9 @@
 <?php
 
-namespace Ihsan\Client\Platform\Middleware;
+namespace Ihsan\Client\Platform\Event;
 
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
+use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
