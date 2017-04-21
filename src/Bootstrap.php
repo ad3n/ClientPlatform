@@ -17,6 +17,7 @@ use Pimple\Container;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -61,9 +62,8 @@ abstract class Bootstrap extends Container
 
     /**
      * @param string $configDir
-     * @param array  $configFiles
      */
-    public function boot($configDir, array $configFiles)
+    public function boot($configDir)
     {
         if ($this->booted) {
             throw new \RuntimeException(sprintf('Application is booted.'));
@@ -74,10 +74,15 @@ abstract class Bootstrap extends Container
             return $cacheAdapter;
         };
 
-        // Process Configuration
-        $configuration = new Configuration($configDir);
-        foreach ($configFiles as $configFile) {
-            $configuration->addResource($configFile);
+        $finder = new Finder();
+        $finder->in($configDir);
+        $finder->ignoreDotFiles(true);
+        $files = $finder->files()->name('*.yml');
+
+        $configuration = new Configuration();
+        /** @var \SplFileInfo $file */
+        foreach ($files as $file) {
+            $configuration->addResource($file->getRealPath());
         }
         $configuration->process($this);
 

@@ -20,19 +20,6 @@ class Configuration implements ConfigurationInterface
     private $configs = [];
 
     /**
-     * @var string
-     */
-    private $configDir;
-
-    /**
-     * @param string $configDir
-     */
-    public function __construct($configDir = null)
-    {
-        $this->configDir = $configDir;
-    }
-
-    /**
      * @param Container $contianer
      */
     public function process(Container $contianer)
@@ -63,11 +50,7 @@ class Configuration implements ConfigurationInterface
      */
     public function addResource($resource)
     {
-        if ($this->configDir) {
-            $this->configs[] = sprintf('%s/%s', $this->configDir, $resource);
-        } else {
-            $this->configs[] = $resource;
-        }
+        $this->configs[] = $resource;
     }
 
     /**
