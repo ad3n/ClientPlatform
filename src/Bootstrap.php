@@ -14,7 +14,7 @@ use Ihsan\Client\Platform\Middleware\MiddlewareStack;
 use Ihsan\Client\Platform\Template\TemplatingMiddleware;
 use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Pimple\Container;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
@@ -36,9 +36,9 @@ abstract class Bootstrap extends Container
     private $booted = false;
 
     /**
-     * @var AdapterInterface
+     * @var CacheItemPoolInterface
      */
-    private $cacheAdapter;
+    private $cachePool;
 
     /**
      * @return string
@@ -46,15 +46,15 @@ abstract class Bootstrap extends Container
     abstract protected function projectDir();
 
     /**
-     * @param AdapterInterface|null $cacheAdapter
+     * @param CacheItemPoolInterface|null $cachePool
      * @param array                 $values
      */
-    public function __construct(AdapterInterface $cacheAdapter = null, array $values = array())
+    public function __construct(CacheItemPoolInterface $cachePool = null, array $values = array())
     {
         parent::__construct($values);
 
-        if (null === $cacheAdapter) {
-            $this->cacheAdapter = new FilesystemAdapter();
+        if (null === $cachePool) {
+            $this->cachePool = new FilesystemAdapter();
         }
 
         $this['project_dir'] = $this->projectDir();
@@ -69,9 +69,9 @@ abstract class Bootstrap extends Container
             throw new \RuntimeException(sprintf('Application is booted.'));
         }
 
-        $cacheAdapter = $this->cacheAdapter;
-        $this['internal.cache_handler'] = function ($container) use ($cacheAdapter) {
-            return $cacheAdapter;
+        $cachePool = $this->cachePool;
+        $this['internal.cache_handler'] = function ($container) use ($cachePool) {
+            return $cachePool;
         };
 
         $finder = new Finder();

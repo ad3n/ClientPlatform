@@ -45,9 +45,21 @@ Create application class `Application.php`
 namespace App;
 
 use Ihsan\Client\Platform\Bootstrap;
+use Psr\Cache\CacheItemPoolInterface;
 
 class Application extends Bootstrap
 {
+    /**
+     * @param string $configDir
+     * @param CacheItemPoolInterface|null $cachePool
+     * @param array $values
+     */
+    public function __construct($configDir, CacheItemPoolInterface $cachePool = null, array $values = array())
+    {
+        parent::__construct($cachePool, $values);
+        $this->boot($configDir);
+    }
+
     /**
      * @return string
      */
@@ -70,12 +82,11 @@ use App\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 $configDir = __DIR__.'/../app/config';
-$configFiles = ['loader.yml'];
 
 $request = Request::createFromGlobals();
 
 $app = new Application();
-$app->boot($configDir, $configFiles);
+$app->boot($configDir);
 $app->handle($request);
 
 ```
