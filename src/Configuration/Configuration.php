@@ -20,16 +20,16 @@ class Configuration implements ConfigurationInterface
     private $configs = [];
 
     /**
-     * @param Container $contianer
+     * @param Container $container
      */
-    public function process(Container $contianer)
+    public function process(Container $container)
     {
         $configs = [];
         /** @var CacheItemPoolInterface $cache */
-        $cache = $contianer['internal.cache_handler'];
+        $cache = $container['internal.cache_handler'];
         $item = str_replace('\\', '_', __CLASS__);
         if ($cache->hasItem($item)) {
-            $this->merge($contianer, $cache->getItem($item)->get());
+            $this->merge($container, $cache->getItem($item)->get());
 
             return;
         }
@@ -42,7 +42,7 @@ class Configuration implements ConfigurationInterface
         $configs = $processor->processConfiguration($this, $configs);
         $cache->save($cache->getItem($item)->set($configs));
 
-        $this->merge($contianer, $cache->getItem($item)->get());
+        $this->merge($container, $cache->getItem($item)->get());
     }
 
     /**
