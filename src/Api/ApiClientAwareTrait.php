@@ -41,20 +41,21 @@ trait ApiClientAwareTrait
 
     /**
      * @param mixed $key
-     * @param mixed $default
+     * @param null $default
+     * @return mixed
      */
     public function fetch($key, $default = null)
     {
-        $this->client->fetch($key, $default);
+        return $this->client->fetch($key, $default);
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @param array $options
      *
      * @return Response
      */
-    public function get($url, array $options)
+    public function get($url, array $options = [])
     {
         return $this->client->get($url, $options);
     }
@@ -65,29 +66,29 @@ trait ApiClientAwareTrait
      *
      * @return Response
      */
-    public function post($url, array $options)
+    public function post($url, array $options = [])
     {
         return $this->client->post($url, $options);
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @param array $options
      *
      * @return Response
      */
-    public function put($url, array $options)
+    public function put($url, array $options = [])
     {
         return $this->client->put($url, $options);
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @param array $options
      *
      * @return Response
      */
-    public function delete($url, array $options)
+    public function delete($url, array $options = [])
     {
         return $this->client->delete($url, $options);
     }

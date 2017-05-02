@@ -79,7 +79,7 @@ class GuzzleClient implements ClientInterface
     public function get($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->get($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->request('GET', $url, $this->mergeOptions($options));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -96,7 +96,7 @@ class GuzzleClient implements ClientInterface
     public function post($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->post($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->request('POST', $url, $this->mergeOptions(['form_params' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -113,7 +113,7 @@ class GuzzleClient implements ClientInterface
     public function put($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->put($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->request('PUT', $url, $this->mergeOptions(['body' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -130,7 +130,7 @@ class GuzzleClient implements ClientInterface
     public function delete($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->delete($url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->request('DELETE', $url, $this->mergeOptions($options));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
