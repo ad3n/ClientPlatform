@@ -39,7 +39,7 @@ class ControllerResolver
         $total = count($controller);
         $last = $total - 1;
 
-        $controller[$total] = $controller[$last];
+        $controller[$total] = sprintf('%sController', $controller[$last]);
         $controller[$last] = 'Controller';
 
         $action = sprintf('%sAction', $controllerNotation[1]);
