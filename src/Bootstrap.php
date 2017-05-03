@@ -47,7 +47,7 @@ abstract class Bootstrap extends Container
 
     /**
      * @param CacheItemPoolInterface|null $cachePool
-     * @param array                 $values
+     * @param array                       $values
      */
     public function __construct(CacheItemPoolInterface $cachePool = null, array $values = array())
     {

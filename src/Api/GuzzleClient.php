@@ -29,13 +29,19 @@ class GuzzleClient implements ClientInterface
     private $options = [];
 
     /**
+     * @var string
+     */
+    private $baseUrl;
+
+    /**
      * @param Session $session
      * @param null    $baseUrl
      */
     public function __construct(Session $session, $baseUrl = null)
     {
         $this->session = $session;
-        $this->guzzle = new Client(['base_uri' => $baseUrl]);
+        $this->guzzle = new Client();
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -71,15 +77,15 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function get($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->request('GET', $url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->get(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions($options));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -88,15 +94,15 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function post($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->request('POST', $url, $this->mergeOptions(['form_params' => $options]));
+            $requestResponse = $this->guzzle->post(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions(['form_params' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -105,15 +111,15 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function put($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->request('PUT', $url, $this->mergeOptions(['body' => $options]));
+            $requestResponse = $this->guzzle->put(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions(['form_params' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -122,15 +128,15 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function delete($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->request('DELETE', $url, $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->delete(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions($options));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -145,6 +151,10 @@ class GuzzleClient implements ClientInterface
      */
     private function mergeOptions(array $options)
     {
+        if ($token = $this->fetch('token')) {
+            $this->bearer($token);
+        }
+
         if (array_key_exists('headers', $options) && array_key_exists('headers', $this->options)) {
             $options['headers'] = array_merge($this->options['headers'], $options['headers']);
         } else {

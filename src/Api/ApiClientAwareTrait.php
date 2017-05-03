@@ -41,7 +41,8 @@ trait ApiClientAwareTrait
 
     /**
      * @param mixed $key
-     * @param null $default
+     * @param null  $default
+     *
      * @return mixed
      */
     public function fetch($key, $default = null)
@@ -51,7 +52,7 @@ trait ApiClientAwareTrait
 
     /**
      * @param string $url
-     * @param array $options
+     * @param array  $options
      *
      * @return Response
      */
@@ -73,7 +74,7 @@ trait ApiClientAwareTrait
 
     /**
      * @param string $url
-     * @param array $options
+     * @param array  $options
      *
      * @return Response
      */
@@ -84,7 +85,7 @@ trait ApiClientAwareTrait
 
     /**
      * @param string $url
-     * @param array $options
+     * @param array  $options
      *
      * @return Response
      */
