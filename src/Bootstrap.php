@@ -63,7 +63,7 @@ abstract class Bootstrap extends Container
     /**
      * @param string $configDir
      */
-    public function boot($configDir)
+    public function boot($configDir = 'configs')
     {
         if ($this->booted) {
             throw new \RuntimeException(sprintf('Application is booted.'));
@@ -75,7 +75,7 @@ abstract class Bootstrap extends Container
         };
 
         $finder = new Finder();
-        $finder->in($configDir);
+        $finder->in(sprintf('%s/%s', $this->projectDir(), $configDir));
         $finder->ignoreDotFiles(true);
         $files = $finder->files()->name('*.yml');
 
