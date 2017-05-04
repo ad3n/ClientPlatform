@@ -77,6 +77,14 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
+     * @param mixed $key
+     */
+    public function remove($key)
+    {
+        $this->session->remove($key);
+    }
+
+    /**
      * @param string $url
      * @param array  $options
      *

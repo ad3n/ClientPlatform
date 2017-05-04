@@ -87,7 +87,7 @@ abstract class Bootstrap extends Container
         $configuration->process($this);
 
         $this['internal.http_client'] = function ($container) {
-            return new GuzzleClient($container['internal.session'], $container['base_url']);
+            return new GuzzleClient($container['internal.session_storage'], $container['base_url']);
         };
 
         $this['internal.controller_resolver'] = function ($container) {
@@ -125,7 +125,7 @@ abstract class Bootstrap extends Container
             );
         };
 
-        $this['internal.session'] = function ($container) {
+        $this['internal.session_storage'] = function ($container) {
             return new Session();
         };
 

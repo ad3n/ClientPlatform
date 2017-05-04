@@ -56,7 +56,7 @@ class ControllerResolver
         }
 
         return array(
-            '_controller' => new $class(), //controller must an object
+            '_controller' => $class, //controller must an object
             '_action' => $action,
             '_parameters' => $attributes,
         );
