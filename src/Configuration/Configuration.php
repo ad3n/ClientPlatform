@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
      */
     public function process(Container $container)
     {
-        $configs = [];
+        $configs = ['app' => []];
         /** @var CacheItemPoolInterface $cache */
         $cache = $container['internal.cache_handler'];
         $item = str_replace('\\', '_', __CLASS__);
@@ -35,7 +35,10 @@ class Configuration implements ConfigurationInterface
         }
 
         foreach ($this->configs as $config) {
-            $configs = array_merge($configs, Yaml::parse(file_get_contents($config)));
+            $yaml = Yaml::parse(file_get_contents($config));
+            if (!empty($yaml['app'])) {
+                $configs['app'] = array_merge($configs['app'], $yaml['app']);
+            }
         }
 
         $processor = new Processor();
