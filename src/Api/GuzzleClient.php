@@ -4,6 +4,7 @@ namespace Ihsan\Client\Platform\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\TransferStats;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -34,16 +35,6 @@ class GuzzleClient implements ClientInterface
     private $baseUrl;
 
     /**
-     * @var string
-     */
-    private $apiKey;
-
-    /**
-     * @var string
-     */
-    private $paramKey;
-
-    /**
      * @param Session $session
      * @param string $baseUrl
      * @param string $apiKey
@@ -54,8 +45,7 @@ class GuzzleClient implements ClientInterface
         $this->session = $session;
         $this->guzzle = new Client();
         $this->baseUrl = $baseUrl;
-        $this->apiKey = $apiKey;
-        $this->paramKey = $paramKey;
+        $this->options['query'] = [$paramKey => $apiKey];
     }
 
     /**
@@ -63,11 +53,7 @@ class GuzzleClient implements ClientInterface
      */
     public function bearer($token)
     {
-        $this->options = array(
-            'headers' => array(
-                'Authorization' => sprintf('Bearer %s', $token),
-            ),
-        );
+        $this->options['headers'] = ['Authorization' => sprintf('Bearer %s', $token)];
     }
 
     /**
@@ -107,7 +93,7 @@ class GuzzleClient implements ClientInterface
     public function get($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->get($this->getRealUrl($url), $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->get($this->getRealUrl($url), $this->mergeOptions(['query' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -189,11 +175,15 @@ class GuzzleClient implements ClientInterface
 
         if (array_key_exists('headers', $options) && array_key_exists('headers', $this->options)) {
             $options['headers'] = array_merge($this->options['headers'], $options['headers']);
-        } else {
-            $options = array_merge($options, $this->options);
         }
 
-        return array_merge($options, $this->fetch('_request_options', []));
+        if (array_key_exists('query', $options)) {
+            $options['query'] = array_merge($this->options['query'], $options['query']);
+        } else {
+            $options['query'] = $this->options['query'];
+        }
+
+        return $options;
     }
 
     /**
@@ -217,9 +207,9 @@ class GuzzleClient implements ClientInterface
     private function getRealUrl($url)
     {
         if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return sprintf('%s?%s=%s', $url, $this->paramKey, $this->apiKey);
+            return $url;
         } else {
-            return sprintf('%s%s?%s=%s', $this->baseUrl, $url, $this->paramKey, $this->apiKey);
+            return sprintf('%s%s', $this->baseUrl, $url);
         }
     }
 }

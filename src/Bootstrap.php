@@ -135,9 +135,9 @@ abstract class Bootstrap extends Container
         $this['internal.http_client'] = function ($container) {
             $clientClass = $container['http_client'];
             if ($clientClass) {
-                $httpClient = new $clientClass($container['internal.session_storage'], $container['base_url']);
+                $httpClient = new $clientClass($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
             } else {
-                $httpClient = new GuzzleClient($container['internal.session_storage'], $container['base_url']);
+                $httpClient = new GuzzleClient($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
             }
 
             return $httpClient;
