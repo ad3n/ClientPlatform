@@ -173,8 +173,12 @@ class GuzzleClient implements ClientInterface
             $this->bearer($token);
         }
 
-        if (array_key_exists('headers', $options) && array_key_exists('headers', $this->options)) {
-            $options['headers'] = array_merge($this->options['headers'], $options['headers']);
+        if (array_key_exists('headers', $this->options)) {
+            if (array_key_exists('headers', $options)) {
+                $options['headers'] = array_merge($this->options['headers'], $options['headers']);
+            } else {
+                $options['headers'] = $this->options['headers'];
+            }
         }
 
         if (array_key_exists('query', $options)) {
