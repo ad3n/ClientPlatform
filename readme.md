@@ -124,3 +124,7 @@ For more information about controller, please read [`Ihsan\Client\Platform\Contr
 ### Configuration
 
 For more information about configuration, please read [`Ihsan\Client\Platform\Configuration\Configuration.php#L78-L166`](src/Configuration/Configuration.php#L78-L166)
+
+### Example
+
+Check: https://github.com/ad3n/ClientApplication
