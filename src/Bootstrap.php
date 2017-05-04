@@ -66,6 +66,16 @@ abstract class Bootstrap extends Container
             throw new \RuntimeException(sprintf('Application is booted.'));
         }
 
+        $cachePath = sprintf('%s/caches', $this->projectDir());
+        if (!$this->cachePool) {
+            $this->cachePool = new FilesystemAdapter('client_platform', 3600, $cachePath);
+        }
+
+        $cachePool = $this->cachePool;
+        $this['internal.cache_handler'] = function () use ($cachePool) {
+            return $cachePool;
+        };
+
         $finder = new Finder();
         $finder->in(sprintf('%s/%s', $this->projectDir(), $configDir));
         $finder->ignoreDotFiles(true);
@@ -121,20 +131,10 @@ abstract class Bootstrap extends Container
             return new Session();
         };
 
-        $cachePath = sprintf('%s%s', $this['project_dir'], $this['template']['cache_dir']);
         $this['internal.template'] = function ($container) use ($cachePath) {
-            $viewPath = sprintf('%s%s', $container['project_dir'], $container['template']['path']);
+            $viewPath = sprintf('%s/%s', $container['project_dir'], $container['template']['path']);
 
             return new TwigTemplateEngine($viewPath, $cachePath);
-        };
-
-        if (!$this->cachePool) {
-            $this->cachePool = new FilesystemAdapter('client_platform', 3600, $cachePath);
-        }
-
-        $cachePool = $this->cachePool;
-        $this['internal.cache_handler'] = function () use ($cachePool) {
-            return $cachePool;
         };
 
         $this->booted = true;
