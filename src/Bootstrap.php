@@ -88,8 +88,59 @@ abstract class Bootstrap extends Container
         }
         $configuration->process($this);
 
+        $this->buildContainer();
+        $this['internal.template'] = function ($container) use ($cachePath) {
+            $templateClass = $container['template']['engine'];
+            $viewPath = sprintf('%s%s', $container['project_dir'], $container['template']['path']);
+            if ($templateClass) {
+                $templateEngine = new $templateClass($viewPath, $cachePath);
+            } else {
+                $templateEngine = new TwigTemplateEngine($viewPath, $cachePath);
+            }
+
+            return $templateEngine;
+        };
+
+        $this->booted = true;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function handle(Request $request)
+    {
+        /** @var MiddlewareBuilder $middlewareBuilder */
+        $middlewareBuilder = $this['internal.middleware_builder'];
+        $middlewareBuilder->addMiddleware(RoutingMiddleware::class, [], 2047);
+        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, [], 2047);
+        $middlewareBuilder->addMiddleware(TemplatingMiddleware::class, [], 2045);
+        $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);
+
+        /** @var MiddlewareStack $middlewareStack */
+        $middlewareStack = $this['internal.middleware_stack'];
+        foreach ($middlewareBuilder->getMiddlewares() as $middleware) {
+            call_user_func_array([$middlewareStack, 'push'], $middleware);
+        }
+
+        $app = $middlewareStack->resolve($this['internal.kernel']);
+        $response = $app->handle($request);
+
+        return $response->send();
+    }
+
+    private function buildContainer()
+    {
         $this['internal.http_client'] = function ($container) {
-            return new GuzzleClient($container['internal.session_storage'], $container['base_url']);
+            $clientClass = $container['http_client'];
+            if ($clientClass) {
+                $httpClient = new $clientClass($container['internal.session_storage'], $container['base_url']);
+            } else {
+                $httpClient = new GuzzleClient($container['internal.session_storage'], $container['base_url']);
+            }
+
+            return $httpClient;
         };
 
         $this['internal.controller_resolver'] = function ($container) {
@@ -127,42 +178,8 @@ abstract class Bootstrap extends Container
             );
         };
 
-        $this['internal.session_storage'] = function ($container) {
+        $this['internal.session_storage'] = function () {
             return new Session();
         };
-
-        $this['internal.template'] = function ($container) use ($cachePath) {
-            $viewPath = sprintf('%s/%s', $container['project_dir'], $container['template']['path']);
-
-            return new TwigTemplateEngine($viewPath, $cachePath);
-        };
-
-        $this->booted = true;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function handle(Request $request)
-    {
-        /** @var MiddlewareBuilder $middlewareBuilder */
-        $middlewareBuilder = $this['internal.middleware_builder'];
-        $middlewareBuilder->addMiddleware(RoutingMiddleware::class, [], 2047);
-        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, [], 2047);
-        $middlewareBuilder->addMiddleware(TemplatingMiddleware::class, [], 2045);
-        $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);
-
-        /** @var MiddlewareStack $middlewareStack */
-        $middlewareStack = $this['internal.middleware_stack'];
-        foreach ($middlewareBuilder->getMiddlewares() as $middleware) {
-            call_user_func_array([$middlewareStack, 'push'], $middleware);
-        }
-
-        $app = $middlewareStack->resolve($this['internal.kernel']);
-        $response = $app->handle($request);
-
-        return $response->send();
     }
 }

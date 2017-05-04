@@ -8,7 +8,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
@@ -83,6 +82,6 @@ class Kernel implements HttpKernelInterface
             return $filterResponse->getResponse();
         }
 
-        throw new InvalidParameterException(sprintf('The controller must return a "\Symfony\Component\HttpFoundation\Response" object'));
+        throw new \InvalidArgumentException(sprintf('The controller must return a "\Symfony\Component\HttpFoundation\Response" object'));
     }
 }
