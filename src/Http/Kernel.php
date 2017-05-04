@@ -38,6 +38,11 @@ class Kernel implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
+        $controller = $request->attributes->get('_controller');
+        if (method_exists($controller, 'getResponse') && $response = $controller->getResponse()) {//Early response
+            return $response;
+        }
+
         $filterResponse = new FilterResponse($request);
         $this->eventDispatcher->dispatch(KernelEvents::FILTER_REQUEST, $filterResponse);
 
@@ -47,7 +52,6 @@ class Kernel implements HttpKernelInterface
         }
 
         try {
-            $controller = $request->attributes->get('_controller');
             if (!$controller) {
                 throw new \InvalidArgumentException('Controller is not valid.');
             }

@@ -93,7 +93,7 @@ class GuzzleClient implements ClientInterface
     public function get($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->get(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->get($this->getRealUrl($url), $this->mergeOptions($options));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -110,7 +110,7 @@ class GuzzleClient implements ClientInterface
     public function post($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->post(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions(['form_params' => $options]));
+            $requestResponse = $this->guzzle->post($this->getRealUrl($url), $this->mergeOptions(['form_params' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -127,12 +127,22 @@ class GuzzleClient implements ClientInterface
     public function put($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->put(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions(['form_params' => $options]));
+            $requestResponse = $this->guzzle->put($this->getRealUrl($url), $this->mergeOptions(['form_params' => $options]));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
 
         return $this->convertToSymfonyResponse($requestResponse);
+    }
+
+    /**
+     * @param string $url
+     * @param array $options
+     * @return Response
+     */
+    public function patch($url, array $options = [])
+    {
+        return $this->put($url, $options);
     }
 
     /**
@@ -144,7 +154,7 @@ class GuzzleClient implements ClientInterface
     public function delete($url, array $options = [])
     {
         try {
-            $requestResponse = $this->guzzle->delete(sprintf('%s%s', $this->baseUrl, $url), $this->mergeOptions($options));
+            $requestResponse = $this->guzzle->delete($this->getRealUrl($url), $this->mergeOptions($options));
         } catch (RequestException $exception) {
             $requestResponse = $exception->getResponse();
         }
@@ -184,5 +194,18 @@ class GuzzleClient implements ClientInterface
             $response->getStatusCode(),
             $response->getHeaders()
         );
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    private function getRealUrl($url)
+    {
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        } else {
+            return sprintf('%s%s', $this->baseUrl, $url);
+        }
     }
 }
