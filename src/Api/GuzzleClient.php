@@ -34,14 +34,28 @@ class GuzzleClient implements ClientInterface
     private $baseUrl;
 
     /**
-     * @param Session $session
-     * @param null    $baseUrl
+     * @var string
      */
-    public function __construct(Session $session, $baseUrl = null)
+    private $apiKey;
+
+    /**
+     * @var string
+     */
+    private $paramKey;
+
+    /**
+     * @param Session $session
+     * @param string $baseUrl
+     * @param string $apiKey
+     * @param string $paramKey
+     */
+    public function __construct(Session $session, $baseUrl, $apiKey, $paramKey = 'api_key')
     {
         $this->session = $session;
         $this->guzzle = new Client();
         $this->baseUrl = $baseUrl;
+        $this->apiKey = $apiKey;
+        $this->paramKey = $paramKey;
     }
 
     /**
@@ -203,9 +217,9 @@ class GuzzleClient implements ClientInterface
     private function getRealUrl($url)
     {
         if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return $url;
+            return sprintf('%s?%s=%s', $url, $this->paramKey, $this->apiKey);
         } else {
-            return sprintf('%s%s', $this->baseUrl, $url);
+            return sprintf('%s%s?%s=%s', $this->baseUrl, $url, $this->paramKey, $this->apiKey);
         }
     }
 }

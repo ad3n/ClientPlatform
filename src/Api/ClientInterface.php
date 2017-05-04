@@ -58,5 +58,13 @@ interface ClientInterface
      *
      * @return Response
      */
+    public function patch($url, array $options = []);
+
+    /**
+     * @param $url
+     * @param array $options
+     *
+     * @return Response
+     */
     public function delete($url, array $options = []);
 }
