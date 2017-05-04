@@ -56,7 +56,7 @@ class RoutingMiddleware implements HttpKernelInterface, ContainerAwareMiddleware
         $request->attributes->add($controllerResolver->resolve($request));
 
         $controller = $request->attributes->get('_controller');
-        $request->attributes->replace(array('_controller' => $controller($this->container)));
+        $request->attributes->replace(array('_controller' => new $controller($this->container)));
 
         return $this->app->handle($request, $type, $catch);
     }

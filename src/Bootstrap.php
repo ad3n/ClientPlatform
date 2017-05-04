@@ -52,10 +52,7 @@ abstract class Bootstrap extends Container
     public function __construct(CacheItemPoolInterface $cachePool = null, array $values = array())
     {
         parent::__construct($values);
-
-        if (null === $cachePool) {
-            $this->cachePool = new FilesystemAdapter();
-        }
+        $this->cachePool = $cachePool;
 
         $this['project_dir'] = $this->projectDir();
     }
@@ -68,11 +65,6 @@ abstract class Bootstrap extends Container
         if ($this->booted) {
             throw new \RuntimeException(sprintf('Application is booted.'));
         }
-
-        $cachePool = $this->cachePool;
-        $this['internal.cache_handler'] = function ($container) use ($cachePool) {
-            return $cachePool;
-        };
 
         $finder = new Finder();
         $finder->in(sprintf('%s/%s', $this->projectDir(), $configDir));
@@ -94,7 +86,7 @@ abstract class Bootstrap extends Container
             return new ControllerResolver($container['internal.url_matcher']);
         };
 
-        $this['internal.event_dispatcher'] = function ($container) {
+        $this['internal.event_dispatcher'] = function () {
             return new EventDispatcher();
         };
 
@@ -102,7 +94,7 @@ abstract class Bootstrap extends Container
             return new Kernel($container['internal.event_dispatcher']);
         };
 
-        $this['internal.middleware_builder'] = function ($container) {
+        $this['internal.middleware_builder'] = function () {
             return new MiddlewareBuilder();
         };
 
@@ -110,11 +102,11 @@ abstract class Bootstrap extends Container
             return new MiddlewareStack($container);
         };
 
-        $this['internal.request_context'] = function ($container) {
+        $this['internal.request_context'] = function () {
             return new RequestContext();
         };
 
-        $this['internal.route_collection'] = function ($container) {
+        $this['internal.route_collection'] = function () {
             return new RouteCollection();
         };
 
@@ -129,11 +121,20 @@ abstract class Bootstrap extends Container
             return new Session();
         };
 
-        $this['internal.template'] = function ($container) {
+        $cachePath = sprintf('%s%s', $this['project_dir'], $this['template']['cache_dir']);
+        $this['internal.template'] = function ($container) use ($cachePath) {
             $viewPath = sprintf('%s%s', $container['project_dir'], $container['template']['path']);
-            $cachePath = sprintf('%s%s', $container['project_dir'], $container['template']['cache_dir']);
 
             return new TwigTemplateEngine($viewPath, $cachePath);
+        };
+
+        if (!$this->cachePool) {
+            $this->cachePool = new FilesystemAdapter('client_platform', 3600, $cachePath);
+        }
+
+        $cachePool = $this->cachePool;
+        $this['internal.cache_handler'] = function () use ($cachePool) {
+            return $cachePool;
         };
 
         $this->booted = true;
