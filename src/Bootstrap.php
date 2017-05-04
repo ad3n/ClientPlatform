@@ -91,7 +91,7 @@ abstract class Bootstrap extends Container
         $this->buildContainer();
         $this['internal.template'] = function ($container) use ($cachePath) {
             $templateClass = $container['template']['engine'];
-            $viewPath = sprintf('%s%s', $container['project_dir'], $container['template']['path']);
+            $viewPath = sprintf('%s/%s', $container['project_dir'], $container['template']['path']);
             if ($templateClass) {
                 $templateEngine = new $templateClass($viewPath, $cachePath);
             } else {
