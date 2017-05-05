@@ -16,6 +16,12 @@ interface ClientInterface
 
     /**
      * @param mixed $key
+     * @param mixed $value
+     */
+    public function addHeader($key, $value);
+
+    /**
+     * @param mixed $key
      * @param mixed $default
      *
      * @return mixed

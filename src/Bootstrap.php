@@ -3,7 +3,7 @@
 namespace Ihsan\Client\Platform;
 
 use Ihsan\Client\Platform\Api\ApiClientMiddleware;
-use Ihsan\Client\Platform\Api\RequestsClient;
+use Ihsan\Client\Platform\Api\Client;
 use Ihsan\Client\Platform\Configuration\Configuration;
 use Ihsan\Client\Platform\Controller\ControllerResolver;
 use Ihsan\Client\Platform\Event\EventDispatcherMiddleware;
@@ -137,7 +137,7 @@ abstract class Bootstrap extends Container
             if ($clientClass) {
                 $httpClient = new $clientClass($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
             } else {
-                $httpClient = new RequestsClient($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
+                $httpClient = new Client($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
             }
 
             return $httpClient;

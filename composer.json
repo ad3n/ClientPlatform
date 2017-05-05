@@ -13,7 +13,6 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "guzzlehttp/guzzle": "~6.2",
         "pimple/pimple": "~3.0",
         "rmccue/requests": "~1.0",
         "stack/builder": "^1.0",

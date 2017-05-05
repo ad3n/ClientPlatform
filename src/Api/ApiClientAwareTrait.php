@@ -23,14 +23,6 @@ trait ApiClientAwareTrait
     }
 
     /**
-     * @return ClientInterface
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
      * @param string $token
      */
     public function bearer($token)
