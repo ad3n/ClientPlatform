@@ -7,5 +7,13 @@ namespace Ihsan\Client\Platform\Api;
  */
 interface ApiClientAwareInterface
 {
+    /**
+     * @param ClientInterface $client
+     */
     public function setClient(ClientInterface $client);
+
+    /**
+     * @return ClientInterface
+     */
+    public function getClient();
 }
