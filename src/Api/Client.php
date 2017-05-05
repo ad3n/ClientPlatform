@@ -103,7 +103,7 @@ class Client implements ClientInterface
      */
     public function get($url, array $options = [])
     {
-        if ('token' === $token = $this->fetch('token')) {
+        if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
 
@@ -118,7 +118,7 @@ class Client implements ClientInterface
      */
     public function post($url, array $options = [])
     {
-        if ('token' === $token = $this->fetch('token')) {
+        if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
 
@@ -133,7 +133,7 @@ class Client implements ClientInterface
      */
     public function put($url, array $options = [])
     {
-        if ('token' === $token = $this->fetch('token')) {
+        if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
 
@@ -148,7 +148,7 @@ class Client implements ClientInterface
      */
     public function patch($url, array $options = [])
     {
-        if ('token' === $token = $this->fetch('token')) {
+        if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
 
@@ -163,7 +163,7 @@ class Client implements ClientInterface
      */
     public function delete($url, array $options = [])
     {
-        if ('token' === $token = $this->fetch('token')) {
+        if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
 
