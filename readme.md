@@ -2,7 +2,7 @@
 
 ### What
 
-Client platform is simple framework that aim to simplify Frontend Developer that working with Web API
+Client platform is simple framework that aim to simplify Frontend Developer that working with [API Platform](https://api-platform.com)
 
 ### Installation
 
@@ -127,4 +127,4 @@ For more information about configuration, please read [`Ihsan\Client\Platform\Co
 
 ### Example
 
-Check: https://github.com/ad3n/ClientApplication
+Check: [https://github.com/ad3n/ClientApplication](https://github.com/ad3n/ClientApplication)
