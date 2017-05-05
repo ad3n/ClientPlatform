@@ -29,40 +29,45 @@ interface ClientInterface
     public function store($key, $value);
 
     /**
-     * @param $url
-     * @param array $options
+     * @param mixed $key
+     */
+    public function remove($key);
+
+    /**
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function get($url, array $options = []);
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function post($url, array $options = []);
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function put($url, array $options = []);
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */
     public function patch($url, array $options = []);
 
     /**
-     * @param $url
-     * @param array $options
+     * @param string $url
+     * @param array  $options
      *
      * @return Response
      */

@@ -4,7 +4,6 @@ namespace Ihsan\Client\Platform\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\TransferStats;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -36,9 +35,9 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param Session $session
-     * @param string $baseUrl
-     * @param string $apiKey
-     * @param string $paramKey
+     * @param string  $baseUrl
+     * @param string  $apiKey
+     * @param string  $paramKey
      */
     public function __construct(Session $session, $baseUrl, $apiKey, $paramKey = 'api_key')
     {
@@ -137,7 +136,8 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param string $url
-     * @param array $options
+     * @param array  $options
+     *
      * @return Response
      */
     public function patch($url, array $options = [])
@@ -206,6 +206,7 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param string $url
+     *
      * @return string
      */
     private function getRealUrl($url)
