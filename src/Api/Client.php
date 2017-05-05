@@ -47,6 +47,7 @@ class Client implements ClientInterface
         $this->baseUrl = $baseUrl;
         $this->paramKey = $paramKey;
         $this->apiKey = $apiKey;
+        $this->addHeader('Content-Type', 'application/json');
     }
 
     /**
