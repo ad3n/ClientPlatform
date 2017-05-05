@@ -51,6 +51,14 @@ trait ApiClientAwareTrait
     }
 
     /**
+     * @param mixed $key
+     */
+    public function remove($key)
+    {
+        $this->client->remove($key);
+    }
+
+    /**
      * @param string $url
      * @param array  $options
      *
