@@ -103,6 +103,10 @@ class Client implements ClientInterface
      */
     public function get($url, array $options = [])
     {
+        if ('token' === $token = $this->fetch('token')) {
+            $this->bearer($token);
+        }
+
         return $this->convertToSymfonyResponse(\Requests::get(sprintf('%s?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), $this->headers, []));
     }
 
@@ -114,6 +118,10 @@ class Client implements ClientInterface
      */
     public function post($url, array $options = [])
     {
+        if ('token' === $token = $this->fetch('token')) {
+            $this->bearer($token);
+        }
+
         return $this->convertToSymfonyResponse(\Requests::post(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
@@ -125,6 +133,10 @@ class Client implements ClientInterface
      */
     public function put($url, array $options = [])
     {
+        if ('token' === $token = $this->fetch('token')) {
+            $this->bearer($token);
+        }
+
         return $this->convertToSymfonyResponse(\Requests::put(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
@@ -136,6 +148,10 @@ class Client implements ClientInterface
      */
     public function patch($url, array $options = [])
     {
+        if ('token' === $token = $this->fetch('token')) {
+            $this->bearer($token);
+        }
+
         return $this->convertToSymfonyResponse(\Requests::patch(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
@@ -147,6 +163,10 @@ class Client implements ClientInterface
      */
     public function delete($url, array $options = [])
     {
+        if ('token' === $token = $this->fetch('token')) {
+            $this->bearer($token);
+        }
+
         return $this->convertToSymfonyResponse(\Requests::delete(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
