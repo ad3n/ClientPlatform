@@ -94,7 +94,7 @@ class Configuration implements ConfigurationInterface
                                 ->cannotBeEmpty()
                             ->end()
                             ->arrayNode('parameters')
-                                ->prototype('scalar')
+                                ->prototype('scalar')->end()
                                 ->defaultValue([])
                             ->end()
                             ->integerNode('priority')->defaultValue(0)->end()

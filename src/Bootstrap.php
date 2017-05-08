@@ -2,16 +2,15 @@
 
 namespace Ihsan\Client\Platform;
 
-use Ihsan\Client\Platform\Api\ApiClientMiddleware;
 use Ihsan\Client\Platform\Api\Client;
 use Ihsan\Client\Platform\Configuration\Configuration;
 use Ihsan\Client\Platform\Controller\ControllerResolver;
-use Ihsan\Client\Platform\Event\EventDispatcherMiddleware;
+use Ihsan\Client\Platform\EventListener\RegisterListenerMiddleware;
 use Ihsan\Client\Platform\Http\Kernel;
 use Ihsan\Client\Platform\Http\RouteMiddleware;
 use Ihsan\Client\Platform\Middleware\MiddlewareBuilder;
 use Ihsan\Client\Platform\Middleware\MiddlewareStack;
-use Ihsan\Client\Platform\Template\TemplateEngineMiddleware;
+use Ihsan\Client\Platform\Twig\TwigExtensionMiddleware;
 use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Pimple\Container;
 use Psr\Cache\CacheItemPoolInterface;
@@ -114,9 +113,12 @@ abstract class Bootstrap extends Container
         /** @var MiddlewareBuilder $middlewareBuilder */
         $middlewareBuilder = $this['internal.middleware_builder'];
         $middlewareBuilder->addMiddleware(RouteMiddleware::class, [], 2047);
-        $middlewareBuilder->addMiddleware(EventDispatcherMiddleware::class, [], 2047);
-        $middlewareBuilder->addMiddleware(TemplateEngineMiddleware::class, [], 2045);
-        $middlewareBuilder->addMiddleware(ApiClientMiddleware::class, [], 2043);
+        $middlewareBuilder->addMiddleware(RegisterListenerMiddleware::class, [], 2047);
+        $middlewareBuilder->addMiddleware(TwigExtensionMiddleware::class, [], 2045);
+
+        foreach ($this['middlewares'] as $middleware) {
+            $middlewareBuilder->addMiddleware($middleware['class'], $middleware['parameters'], $middleware['priority']);
+        }
 
         /** @var MiddlewareStack $middlewareStack */
         $middlewareStack = $this['internal.middleware_stack'];

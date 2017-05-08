@@ -60,9 +60,6 @@ class RouteMiddleware implements HttpKernelInterface, ContainerAwareInterface
             $controller = $this->container[$controller];
         } catch (\Exception $exception) {
             $controller = new $controller();
-            if ($controller instanceof ContainerAwareInterface) {
-                $controller->setContainer($this->container);
-            }
         }
 
         $request->attributes->set('_controller', $controller);
