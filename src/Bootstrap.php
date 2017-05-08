@@ -14,6 +14,7 @@ use Ihsan\Client\Platform\Twig\TwigExtensionMiddleware;
 use Ihsan\Client\Platform\Twig\TwigTemplateEngine;
 use Pimple\Container;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
@@ -58,16 +59,23 @@ abstract class Bootstrap extends Container
 
     /**
      * @param string $configDir
+     * @param string $environment
      */
-    public function boot($configDir = 'configs')
+    public function boot($configDir = 'configs', $environment = 'dev')
     {
         if ($this->booted) {
             throw new \RuntimeException(sprintf('Application is booted.'));
         }
 
+        $this['environment'] = strtolower($environment);
+
         $cachePath = sprintf('%s/caches', $this->projectDir());
         if (!$this->cachePool) {
-            $this->cachePool = new FilesystemAdapter('client_platform', 3600, $cachePath);
+            if ('prod' === $this['environment']) {
+                $this->cachePool = new ApcuAdapter();
+            } else {
+                $this->cachePool = new FilesystemAdapter('client_platform', 3600, $cachePath);
+            }
         }
 
         $cachePool = $this->cachePool;
@@ -91,10 +99,16 @@ abstract class Bootstrap extends Container
         $this['internal.template'] = function ($container) use ($cachePath) {
             $templateClass = $container['template']['engine'];
             $viewPath = sprintf('%s/%s', $container['project_dir'], $container['template']['path']);
+
+            $cache = false;
+            if ('prod' === $container['environment']) {
+                $cache = $cachePath;
+            }
+
             if ($templateClass) {
-                $templateEngine = new $templateClass($viewPath, $cachePath);
+                $templateEngine = new $templateClass($viewPath, $cache);
             } else {
-                $templateEngine = new TwigTemplateEngine($viewPath, $cachePath);
+                $templateEngine = new TwigTemplateEngine($viewPath, $cache);
             }
 
             return $templateEngine;

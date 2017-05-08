@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
         /** @var CacheItemPoolInterface $cache */
         $cache = $container['internal.cache_handler'];
         $item = str_replace('\\', '_', __CLASS__);
-        if ($cache->hasItem($item)) {
+        if ($cache->hasItem($item) && 'prod' === $container['environment']) {
             $this->merge($container, $cache->getItem($item)->get());
 
             return;
