@@ -48,6 +48,7 @@ class Client implements ClientInterface
         $this->paramKey = $paramKey;
         $this->apiKey = $apiKey;
         $this->addHeader('Content-Type', 'application/json');
+        $this->addHeader('Accept', 'application/ld+json');
     }
 
     /**

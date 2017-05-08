@@ -1,6 +1,6 @@
 <?php
 
-namespace Ihsan\Client\Platform;
+namespace Ihsan\Client\Platform\EventListener;
 
 use Ihsan\Client\Platform\Api\ApiClientAwareInterface;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
