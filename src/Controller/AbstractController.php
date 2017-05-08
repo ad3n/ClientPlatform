@@ -16,17 +16,4 @@ abstract class AbstractController implements ControllerInterface, TemplateAwareI
 {
     use TemplateAwareTrait;
     use ApiClientAwareTrait;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
 }
