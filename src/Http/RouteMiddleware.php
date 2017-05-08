@@ -3,8 +3,8 @@
 namespace Ihsan\Client\Platform\Http;
 
 use Ihsan\Client\Platform\Controller\ControllerResolver;
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -16,9 +16,9 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class RoutingMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
+class RouteMiddleware implements HttpKernelInterface, ContainerAwareInterface
 {
-    use ContainerAwareMiddlewareTrait;
+    use ContainerAwareTrait;
 
     /**
      * @var HttpKernelInterface
@@ -56,7 +56,16 @@ class RoutingMiddleware implements HttpKernelInterface, ContainerAwareMiddleware
         $request->attributes->add($controllerResolver->resolve($request));
 
         $controller = $request->attributes->get('_controller');
-        $request->attributes->set('_controller', new $controller($this->container));
+        try {
+            $controller = $this->container[$controller];
+        } catch (\Exception $exception) {
+            $controller = new $controller();
+            if ($controller instanceof ContainerAwareInterface) {
+                $controller->setContainer($this->container);
+            }
+        }
+
+        $request->attributes->set('_controller', $controller);
 
         return $this->app->handle($request, $type, $catch);
     }

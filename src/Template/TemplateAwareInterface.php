@@ -5,7 +5,7 @@ namespace Ihsan\Client\Platform\Template;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-interface TemplatingAwareInterface
+interface TemplateAwareInterface
 {
-    public function setTemplateEngine(TemplateEngineInterface $templateEngine);
+    public function setTemplate(TemplateEngineInterface $templateEngine);
 }

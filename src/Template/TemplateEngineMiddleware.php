@@ -2,8 +2,8 @@
 
 namespace Ihsan\Client\Platform\Template;
 
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
 use Ihsan\Client\Platform\Twig\TwigFilterExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +12,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
+class TemplateEngineMiddleware implements HttpKernelInterface, ContainerAwareInterface
 {
-    use ContainerAwareMiddlewareTrait;
+    use ContainerAwareTrait;
 
     /**
      * @var HttpKernelInterface
@@ -39,13 +39,13 @@ class TemplatingMiddleware implements HttpKernelInterface, ContainerAwareMiddlew
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
         $controller = $request->attributes->get('_controller');
-        if ($controller instanceof TemplatingAwareInterface) {
+        if ($controller instanceof TemplateAwareInterface) {
             $templateEngine = $this->container['internal.template'];
             if ($templateEngine instanceof \Twig_Environment) {
                 $templateEngine->addExtension(new TwigFilterExtension());
             }
 
-            $controller->setTemplateEngine($templateEngine);
+            $controller->setTemplate($templateEngine);
         }
 
         return $this->app->handle($request, $type, $catch);

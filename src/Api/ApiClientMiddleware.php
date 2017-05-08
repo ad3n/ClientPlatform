@@ -2,8 +2,8 @@
 
 namespace Ihsan\Client\Platform\Api;
 
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -11,9 +11,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class ApiClientMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
+class ApiClientMiddleware implements HttpKernelInterface, ContainerAwareInterface
 {
-    use ContainerAwareMiddlewareTrait;
+    use ContainerAwareTrait;
 
     /**
      * @var HttpKernelInterface

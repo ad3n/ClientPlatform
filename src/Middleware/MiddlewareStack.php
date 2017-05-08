@@ -2,6 +2,7 @@
 
 namespace Ihsan\Client\Platform\Middleware;
 
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
 use Pimple\Container;
 use Stack\StackedHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -74,7 +75,7 @@ class MiddlewareStack
 
             array_unshift($middlewares, $app);
 
-            if ($app instanceof ContainerAwareMiddlewareInterface) {
+            if ($app instanceof ContainerAwareInterface) {
                 $app->setContainer($this->container);
             }
         }

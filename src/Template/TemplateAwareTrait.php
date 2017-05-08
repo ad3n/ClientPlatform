@@ -5,7 +5,7 @@ namespace Ihsan\Client\Platform\Template;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-trait TemplatingAwareTrait
+trait TemplateAwareTrait
 {
     /**
      * @var TemplateEngineInterface
@@ -15,7 +15,7 @@ trait TemplatingAwareTrait
     /**
      * @param TemplateEngineInterface $templateEngine
      */
-    public function setTemplateEngine(TemplateEngineInterface $templateEngine)
+    public function setTemplate(TemplateEngineInterface $templateEngine)
     {
         $this->templateEngine = $templateEngine;
     }

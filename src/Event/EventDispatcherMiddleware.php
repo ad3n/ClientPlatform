@@ -2,8 +2,8 @@
 
 namespace Ihsan\Client\Platform\Event;
 
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareInterface;
-use Ihsan\Client\Platform\Middleware\ContainerAwareMiddlewareTrait;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +12,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMiddlewareInterface
+class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareInterface
 {
-    use ContainerAwareMiddlewareTrait;
+    use ContainerAwareTrait;
 
     /**
      * @var HttpKernelInterface
@@ -45,9 +45,9 @@ class EventDispatcherMiddleware implements HttpKernelInterface, ContainerAwareMi
     {
         $this->eventDispatcher = $this->container['internal.event_dispatcher'];
         foreach ($this->container['event_listeners'] as $config) {
-            if ($service = isset($this->container[$config['class']])) {
-                $class = $service;
-            } else {
+            try {
+                $class = $this->container[$config['class']];
+            } catch (\Exception $exception) {
                 $class = new $config['class']();
             }
 

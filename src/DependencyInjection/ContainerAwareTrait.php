@@ -1,13 +1,13 @@
 <?php
 
-namespace Ihsan\Client\Platform\Middleware;
+namespace Ihsan\Client\Platform\DependencyInjection;
 
 use Pimple\Container;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-trait ContainerAwareMiddlewareTrait
+trait ContainerAwareTrait
 {
     /**
      * @var Container
