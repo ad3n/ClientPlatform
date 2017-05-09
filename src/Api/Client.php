@@ -47,7 +47,6 @@ class Client implements ClientInterface
         $this->baseUrl = $baseUrl;
         $this->paramKey = $paramKey;
         $this->apiKey = $apiKey;
-        $this->addHeader('Content-Type', 'application/json');
     }
 
     /**
@@ -106,9 +105,10 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
+        $this->addHeader('Content-Type', 'application/ld+json');
         $this->addHeader('Accept', 'application/ld+json');
 
-        return $this->convertToSymfonyResponse(\Requests::get(sprintf('%s?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), $this->headers, []));
+        return $this->convertToSymfonyResponse(\Requests::get(sprintf('%s.jsonld?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), $this->headers, []));
     }
 
     /**
@@ -122,9 +122,10 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
+        $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Accept', 'application/json');
 
-        return $this->convertToSymfonyResponse(\Requests::post(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse(\Requests::post(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
     /**
@@ -138,9 +139,10 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
+        $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Accept', 'application/json');
 
-        return $this->convertToSymfonyResponse(\Requests::put(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse(\Requests::put(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
     /**
@@ -154,9 +156,10 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
+        $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Accept', 'application/json');
 
-        return $this->convertToSymfonyResponse(\Requests::patch(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse(\Requests::patch(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
     }
 
     /**
@@ -170,9 +173,10 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
+        $this->addHeader('Content-Type', 'application/ld+json');
         $this->addHeader('Accept', 'application/ld+json');
 
-        return $this->convertToSymfonyResponse(\Requests::delete(sprintf('%s?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse(\Requests::delete(sprintf('%s.jsonld?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, []));
     }
 
     /**
