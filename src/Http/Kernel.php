@@ -45,27 +45,27 @@ class Kernel implements HttpKernelInterface
             return $response;
         }
 
+        $controller = $request->attributes->get('_controller');
+        if (!$controller) {
+            throw new \InvalidArgumentException('Controller is not valid.');
+        }
+
+        $action = $request->attributes->get('_action');
+        if (!$action) {
+            throw new \InvalidArgumentException('Action method is not valid.');
+        }
+
+        $request->attributes->remove('_controller');
+        $request->attributes->remove('_action');
+        $parameters = $request->attributes->get('_parameters', []);
+        if (!empty($parameters)) {
+            $request->attributes->remove('_parameters');
+        }
+
+        $filterController = new FilterController($controller);
+        $this->eventDispatcher->dispatch(KernelEvents::FILTER_CONTROLLER, $filterController);
+
         try {
-            $controller = $request->attributes->get('_controller');
-            if (!$controller) {
-                throw new \InvalidArgumentException('Controller is not valid.');
-            }
-
-            $action = $request->attributes->get('_action');
-            if (!$action) {
-                throw new \InvalidArgumentException('Action method is not valid.');
-            }
-
-            $request->attributes->remove('_controller');
-            $request->attributes->remove('_action');
-            $parameters = $request->attributes->get('_parameters', []);
-            if (!empty($parameters)) {
-                $request->attributes->remove('_parameters');
-            }
-
-            $filterController = new FilterController($controller);
-            $this->eventDispatcher->dispatch(KernelEvents::FILTER_CONTROLLER, $filterController);
-
             $response = call_user_func_array([$controller, $action], array_merge($parameters, [$request]));
         } catch (ResourceNotFoundException $e) {
             $response = new Response('Not found!', Response::HTTP_NOT_FOUND);

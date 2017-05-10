@@ -2,7 +2,6 @@
 
 namespace Ihsan\Client\Platform\EventListener;
 
-use Ihsan\Client\Platform\EventListener\ControllerListener;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
 use Ihsan\Client\Platform\Http\KernelEvents;

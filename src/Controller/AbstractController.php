@@ -6,7 +6,6 @@ use Ihsan\Client\Platform\Api\ApiClientAwareInterface;
 use Ihsan\Client\Platform\Api\ApiClientAwareTrait;
 use Ihsan\Client\Platform\Template\TemplateAwareInterface;
 use Ihsan\Client\Platform\Template\TemplateAwareTrait;
-use Pimple\Container;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -16,4 +15,28 @@ abstract class AbstractController implements ControllerInterface, TemplateAwareI
 {
     use TemplateAwareTrait;
     use ApiClientAwareTrait;
+
+    /**
+     * @param string $url
+     * @param string $method
+     * @param array  $data
+     *
+     * @return Response
+     */
+    protected function request($url, $method = 'GET', array $data = [])
+    {
+        try {
+            return call_user_func_array([$this, strtolower($method)], [$url, $data]);
+        } catch (\Exception $exception) {
+            throw new \RuntimeException('Http method is not valid.');
+        }
+    }
+
+    /**
+     * @param string $token
+     */
+    protected function auth($token)
+    {
+        $this->client->bearer($token);
+    }
 }
