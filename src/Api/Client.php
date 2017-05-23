@@ -15,6 +15,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class Client implements ClientInterface
 {
     /**
+     * @var string
+     */
+    private static $CLIENT_KEY = 'CLIENT_KEY';
+
+    /**
      * @var Session
      */
     private $session;
@@ -49,18 +54,21 @@ class Client implements ClientInterface
      * @param string  $baseUrl
      * @param string  $apiKey
      * @param string  $paramKey
-     * @param string  $cookiesFile
      */
-    public function __construct(Session $session, $baseUrl, $apiKey, $paramKey = 'api_key', $cookiesFile = null)
+    public function __construct(Session $session, $baseUrl, $apiKey, $paramKey = 'api_key')
     {
         $this->session = $session;
         $this->baseUrl = $baseUrl;
         $this->paramKey = $paramKey;
         $this->apiKey = $apiKey;
 
-        if (null === $cookiesFile) {
-            $cookiesFile = sprintf('%s/client_platform_cookies.txt', sys_get_temp_dir());
+        if (!$this->session->has(static::$CLIENT_KEY)) {
+            $clientKey = sha1(date('YmdHis'));
+            $this->session->set(static::$CLIENT_KEY, $clientKey);
+        } else {
+            $clientKey = $this->session->get(static::$CLIENT_KEY);
         }
+        $cookiesFile = sprintf('%s/%s.txt', sys_get_temp_dir(), $clientKey);
 
         $this->request = new GuzzleClient([
             'cookies' => new FileCookieJar($cookiesFile, true),
