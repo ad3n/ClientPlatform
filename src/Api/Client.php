@@ -2,6 +2,9 @@
 
 namespace Ihsan\Client\Platform\Api;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Cookie\FileCookieJar;
+use Psr\Http\Message\ResponseInterface as GuzzleResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -36,7 +39,7 @@ class Client implements ClientInterface
     private $headers = [];
 
     /**
-     * @var \Requests_Session
+     * @var GuzzleClient
      */
     private $request;
 
@@ -52,7 +55,12 @@ class Client implements ClientInterface
         $this->baseUrl = $baseUrl;
         $this->paramKey = $paramKey;
         $this->apiKey = $apiKey;
-        $this->request = new \Requests_Session();
+
+        $cookies = new FileCookieJar(sprintf('%s/client_platform_cookies.txt', sys_get_temp_dir()), true);
+
+        $this->request = new GuzzleClient([
+            'cookies' => $cookies,
+        ]);
     }
 
     /**
@@ -114,7 +122,9 @@ class Client implements ClientInterface
         $this->addHeader('Content-Type', 'application/ld+json');
         $this->addHeader('Accept', 'application/ld+json');
 
-        return $this->convertToSymfonyResponse($this->request->get(sprintf('%s.jsonld?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), $this->headers, []));
+        return $this->convertToSymfonyResponse($this->request->get(sprintf('%s.jsonld?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
+            'headers' => $this->headers,
+        ]));
     }
 
     /**
@@ -131,7 +141,10 @@ class Client implements ClientInterface
         $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Accept', 'application/json');
 
-        return $this->convertToSymfonyResponse($this->request->post(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse($this->request->post(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), [
+            'headers' => $this->headers,
+            'body' => json_encode($options),
+        ]));
     }
 
     /**
@@ -148,7 +161,10 @@ class Client implements ClientInterface
         $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Accept', 'application/json');
 
-        return $this->convertToSymfonyResponse($this->request->put(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse($this->request->put(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), [
+            'headers' => $this->headers,
+            'body' => json_encode($options),
+        ]));
     }
 
     /**
@@ -165,7 +181,10 @@ class Client implements ClientInterface
         $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Accept', 'application/json');
 
-        return $this->convertToSymfonyResponse($this->request->patch(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, json_encode($options)));
+        return $this->convertToSymfonyResponse($this->request->patch(sprintf('%s.json?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), [
+            'headers' => $this->headers,
+            'body' => json_encode($options),
+        ]));
     }
 
     /**
@@ -182,20 +201,22 @@ class Client implements ClientInterface
         $this->addHeader('Content-Type', 'application/ld+json');
         $this->addHeader('Accept', 'application/ld+json');
 
-        return $this->convertToSymfonyResponse($this->request->delete(sprintf('%s.jsonld?%s=%s', $this->getRealUrl($url), $this->paramKey, $this->apiKey), $this->headers, []));
+        return $this->convertToSymfonyResponse($this->request->delete(sprintf('%s.json?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
+            'headers' => $this->headers,
+        ]));
     }
 
     /**
-     * @param \Requests_Response $response
+     * @param GuzzleResponse $response
      *
      * @return Response
      */
-    private function convertToSymfonyResponse(\Requests_Response $response)
+    private function convertToSymfonyResponse(GuzzleResponse $response)
     {
         return new Response(
-            $response->body,
-            $response->status_code,
-            $response->headers->getAll()
+            $response->getBody()->getContents(),
+            $response->getStatusCode(),
+            $response->getHeaders()
         );
     }
 
