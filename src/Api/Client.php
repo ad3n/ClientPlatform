@@ -131,11 +131,11 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/ld+json');
-        $this->addHeader('Accept', 'application/ld+json');
+        $this->addHeader('Content-Type', 'application/json');
+        $this->addHeader('Accept', 'application/json');
 
         try {
-            $response = $this->request->get(sprintf('%s.jsonld?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
+            $response = $this->request->get(sprintf('%s.json?%s', $this->getRealUrl($url), http_build_query(array_merge(['_format' => 'jsonld', $this->paramKey => $this->apiKey], $options))), [
                 'headers' => $this->headers,
             ]);
         } catch (RequestException $e) {
