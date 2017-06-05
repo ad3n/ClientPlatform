@@ -39,6 +39,8 @@ interface ClientInterface
      */
     public function remove($key);
 
+    public function removeAll();
+
     /**
      * @param string $url
      * @param array  $options
