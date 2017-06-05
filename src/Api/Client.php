@@ -120,6 +120,14 @@ class Client implements ClientInterface
         $this->session->remove($key);
     }
 
+    public function removeAll()
+    {
+        $sessions = $this->session->all();
+        foreach ($sessions as $session) {
+            $this->session->remove($session);
+        }
+    }
+
     /**
      * @param string $url
      * @param array  $options
@@ -234,8 +242,8 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/json');
-        $this->addHeader('Accept', 'application/json');
+        $this->addHeader('Content-Type', 'application/ld+json');
+        $this->addHeader('Accept', 'application/ld+json');
 
         try {
             $response = $this->request->delete(sprintf('%s.json?%s', $this->getRealUrl($url), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
