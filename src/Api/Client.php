@@ -295,11 +295,11 @@ class Client implements ClientInterface
     {
         if (false !== strpos($url, '.')) {
             if ('get' === strtolower($method)) {
-                return sprintf('%s.jsonld');
+                return sprintf('%s.jsonld', $url);
             }
 
 
-            return sprintf('%s.json');
+            return sprintf('%s.json', $url);
         }
 
         return $url;
