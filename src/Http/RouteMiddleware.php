@@ -86,6 +86,17 @@ class RouteMiddleware implements HttpKernelInterface, ContainerAwareInterface
             $methods = $config['methods'];
         }
 
-        $router->add($config['controller'], new Route($config['path'], [], [], [], '', [], $methods));
+        $defaults = [];
+        if (key_exists('defaults', $config) && !empty($config['defaults'])) {
+            $defaults = $config['defaults'];
+        }
+
+        $requirements = [];
+        if (key_exists('requirements', $config) && !empty($config['requirements'])) {
+            $requirements = $config['requirements'];
+        }
+
+
+        $router->add($config['controller'], new Route($config['path'], $defaults, $requirements, [], '', [], $methods));
     }
 }
