@@ -293,7 +293,7 @@ class Client implements ClientInterface
      */
     private function getRequestExtension($url, $method)
     {
-        if (false !== strpos($url, '.')) {
+        if (false === strpos($url, '.')) {
             if ('get' === strtolower($method)) {
                 return sprintf('%s.jsonld', $url);
             }
