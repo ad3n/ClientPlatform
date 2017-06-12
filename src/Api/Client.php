@@ -143,7 +143,7 @@ class Client implements ClientInterface
         $this->addHeader('Accept', 'application/ld+json');
 
         try {
-            $response = $this->request->get(sprintf('%s?%s', $this->getRealUrl($url, __METHOD__), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
+            $response = $this->request->get(sprintf('%s?%s', $this->getRealUrl($url, 'get'), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
                 'headers' => $this->headers,
             ]);
         } catch (RequestException $e) {
@@ -168,7 +168,7 @@ class Client implements ClientInterface
         $this->addHeader('Accept', 'application/json');
 
         try {
-            $response = $this->request->post(sprintf('%s?%s=%s', $this->getRealUrl($url, __METHOD__), $this->paramKey, $this->apiKey), [
+            $response = $this->request->post(sprintf('%s?%s=%s', $this->getRealUrl($url, 'post'), $this->paramKey, $this->apiKey), [
                 'headers' => $this->headers,
                 'body' => json_encode($options),
             ]);
@@ -194,7 +194,7 @@ class Client implements ClientInterface
         $this->addHeader('Accept', 'application/json');
 
         try {
-            $response = $this->request->put(sprintf('%s?%s=%s', $this->getRealUrl($url, __METHOD__), $this->paramKey, $this->apiKey), [
+            $response = $this->request->put(sprintf('%s?%s=%s', $this->getRealUrl($url, 'put'), $this->paramKey, $this->apiKey), [
                 'headers' => $this->headers,
                 'body' => json_encode($options),
             ]);
@@ -220,7 +220,7 @@ class Client implements ClientInterface
         $this->addHeader('Accept', 'application/json');
 
         try {
-            $response = $this->request->patch(sprintf('%s?%s=%s', $this->getRealUrl($url, __METHOD__), $this->paramKey, $this->apiKey), [
+            $response = $this->request->patch(sprintf('%s?%s=%s', $this->getRealUrl($url, 'patch'), $this->paramKey, $this->apiKey), [
                 'headers' => $this->headers,
                 'body' => json_encode($options),
             ]);
@@ -246,7 +246,7 @@ class Client implements ClientInterface
         $this->addHeader('Accept', 'application/json');
 
         try {
-            $response = $this->request->delete(sprintf('%s?%s', $this->getRealUrl($url, __METHOD__), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
+            $response = $this->request->delete(sprintf('%s?%s', $this->getRealUrl($url, 'delete'), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
                 'headers' => $this->headers,
             ]);
         } catch (RequestException $e) {
