@@ -74,7 +74,7 @@ class RegisterListenerMiddleware implements HttpKernelInterface, ContainerAwareI
     private function attach($event, $callback, $priority = 0)
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not callable.'));
+            throw new \InvalidArgumentException(sprintf('"%s:%s" is not callable.', get_class($callback[0]), $callback[1]));
         }
 
         $this->eventDispatcher->addListener($event, $callback, $priority);
