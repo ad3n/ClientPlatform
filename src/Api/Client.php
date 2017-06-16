@@ -124,7 +124,9 @@ class Client implements ClientInterface
     {
         $sessions = $this->session->all();
         foreach ($sessions as $session) {
-            $this->session->remove($session);
+            if ($session && (is_int($session) || is_string($session))) {
+                $this->session->remove($session);
+            }
         }
     }
 
