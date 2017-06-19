@@ -85,8 +85,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('http')
-                    ->isRequired()
-                    ->cannotBeEmpty()
                     ->children()
                         ->scalarNode('client')->defaultValue(null)->end()
                         ->arrayNode('get')
