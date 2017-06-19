@@ -3,6 +3,7 @@
 namespace Ihsan\Client\Platform;
 
 use Ihsan\Client\Platform\Api\Client;
+use Ihsan\Client\Platform\Api\ClientInterface;
 use Ihsan\Client\Platform\Configuration\Configuration;
 use Ihsan\Client\Platform\Controller\ControllerResolver;
 use Ihsan\Client\Platform\EventListener\RegisterListenerMiddleware;
@@ -149,12 +150,20 @@ abstract class Bootstrap extends Container
     private function buildContainer()
     {
         $this['internal.http_client'] = function ($container) {
-            $clientClass = $container['http_client'];
+            $clientClass = $container['http']['client'];
             if ($clientClass) {
+                /** @var ClientInterface $httpClient */
                 $httpClient = new $clientClass($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
             } else {
+                /** @var ClientInterface $httpClient */
                 $httpClient = new Client($container['internal.session_storage'], $container['api']['base_url'], $container['api']['api_key'], $container['api']['param_key']);
             }
+
+            $httpClient->setMethodHeaders('get', $container['http']['get']);
+            $httpClient->setMethodHeaders('post', $container['http']['post']);
+            $httpClient->setMethodHeaders('put', $container['http']['put']);
+            $httpClient->setMethodHeaders('patch', $container['http']['patch']);
+            $httpClient->setMethodHeaders('delete', $container['http']['delete']);
 
             return $httpClient;
         };

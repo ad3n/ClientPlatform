@@ -57,6 +57,11 @@ trait ApiClientAwareTrait
     {
         $this->client->remove($key);
     }
+    
+    public function removeAll()
+    {
+        $this->client->removeAll();
+    }
 
     /**
      * @param string $url

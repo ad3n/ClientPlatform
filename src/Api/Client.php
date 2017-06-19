@@ -45,6 +45,11 @@ class Client implements ClientInterface
     private $headers = [];
 
     /**
+     * @var array
+     */
+    private $methodHeaders = [];
+
+    /**
      * @var GuzzleClient
      */
     private $request;
@@ -90,6 +95,15 @@ class Client implements ClientInterface
     public function addHeader($key, $param)
     {
         $this->headers[$key] = $param;
+    }
+
+    /**
+     * @param string $method
+     * @param array $headers
+     */
+    public function setMethodHeaders($method, array $headers)
+    {
+        $this->methodHeaders[strtolower($method)] = $headers;
     }
 
     /**
@@ -141,8 +155,11 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/ld+json');
-        $this->addHeader('Accept', 'application/ld+json');
+
+        if (array_key_exists('get', $this->methodHeaders)) {
+            $this->addHeader('Content-Type', $this->methodHeaders['get']['content_type']);
+            $this->addHeader('Accept', $this->methodHeaders['get']['accept']);
+        }
 
         try {
             $response = $this->request->get(sprintf('%s?%s', $this->getRealUrl($url, 'get'), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [
@@ -166,8 +183,11 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/json');
-        $this->addHeader('Accept', 'application/json');
+
+        if (array_key_exists('post', $this->methodHeaders)) {
+            $this->addHeader('Content-Type', $this->methodHeaders['post']['content_type']);
+            $this->addHeader('Accept', $this->methodHeaders['post']['accept']);
+        }
 
         try {
             $response = $this->request->post(sprintf('%s?%s=%s', $this->getRealUrl($url, 'post'), $this->paramKey, $this->apiKey), [
@@ -192,8 +212,11 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/json');
-        $this->addHeader('Accept', 'application/json');
+
+        if (array_key_exists('put', $this->methodHeaders)) {
+            $this->addHeader('Content-Type', $this->methodHeaders['put']['content_type']);
+            $this->addHeader('Accept', $this->methodHeaders['put']['accept']);
+        }
 
         try {
             $response = $this->request->put(sprintf('%s?%s=%s', $this->getRealUrl($url, 'put'), $this->paramKey, $this->apiKey), [
@@ -218,8 +241,11 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/json');
-        $this->addHeader('Accept', 'application/json');
+
+        if (array_key_exists('patch', $this->methodHeaders)) {
+            $this->addHeader('Content-Type', $this->methodHeaders['patch']['content_type']);
+            $this->addHeader('Accept', $this->methodHeaders['patch']['accept']);
+        }
 
         try {
             $response = $this->request->patch(sprintf('%s?%s=%s', $this->getRealUrl($url, 'patch'), $this->paramKey, $this->apiKey), [
@@ -244,8 +270,11 @@ class Client implements ClientInterface
         if ($token = $this->fetch('token')) {
             $this->bearer($token);
         }
-        $this->addHeader('Content-Type', 'application/json');
-        $this->addHeader('Accept', 'application/json');
+
+        if (array_key_exists('delete', $this->methodHeaders)) {
+            $this->addHeader('Content-Type', $this->methodHeaders['delete']['content_type']);
+            $this->addHeader('Accept', $this->methodHeaders['delete']['accept']);
+        }
 
         try {
             $response = $this->request->delete(sprintf('%s?%s', $this->getRealUrl($url, 'delete'), http_build_query(array_merge([$this->paramKey => $this->apiKey], $options))), [

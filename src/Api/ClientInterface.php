@@ -21,6 +21,12 @@ interface ClientInterface
     public function addHeader($key, $value);
 
     /**
+     * @param string $method
+     * @param array $headers
+     */
+    public function setMethodHeaders($method, array $headers);
+
+    /**
      * @param mixed $key
      * @param mixed $default
      *
