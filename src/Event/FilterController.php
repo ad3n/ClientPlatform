@@ -6,7 +6,7 @@ use Ihsan\Client\Platform\Controller\ControllerInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 class FilterController extends Event
 {

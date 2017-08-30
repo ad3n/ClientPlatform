@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 class RouteMiddleware implements HttpKernelInterface, ContainerAwareInterface
 {

@@ -27,7 +27,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 abstract class Bootstrap extends Container
 {
@@ -84,19 +84,9 @@ abstract class Bootstrap extends Container
             return $cachePool;
         };
 
-        $finder = new Finder();
-        $finder->in(sprintf('%s/%s', $this->projectDir(), $configDir));
-        $finder->ignoreDotFiles(true);
-        $files = $finder->files()->name('*.yml');
-
-        $configuration = new Configuration();
-        /** @var \SplFileInfo $file */
-        foreach ($files as $file) {
-            $configuration->addResource($file->getRealPath());
-        }
-        $configuration->process($this);
-
+        $this->processConfiguration($configDir);
         $this->buildContainer();
+
         $this['internal.template'] = function ($container) use ($cachePath) {
             $templateClass = $container['template']['engine'];
             $viewPath = sprintf('%s/%s', $container['project_dir'], $container['template']['path']);
@@ -206,5 +196,23 @@ abstract class Bootstrap extends Container
         $this['internal.session_storage'] = function () {
             return new Session();
         };
+    }
+
+    /**
+     * @param string $configDir
+     */
+    private function processConfiguration($configDir)
+    {
+        $finder = new Finder();
+        $finder->in(sprintf('%s/%s', $this->projectDir(), $configDir));
+        $finder->ignoreDotFiles(true);
+        $files = $finder->files()->name('*.yml');
+
+        $configuration = new Configuration();
+        /** @var \SplFileInfo $file */
+        foreach ($files as $file) {
+            $configuration->addResource($file->getRealPath());
+        }
+        $configuration->process($this);
     }
 }

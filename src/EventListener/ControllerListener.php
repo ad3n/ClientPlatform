@@ -9,7 +9,7 @@ use Ihsan\Client\Platform\Event\FilterController;
 use Ihsan\Client\Platform\Template\TemplateAwareInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 class ControllerListener implements ContainerAwareInterface
 {

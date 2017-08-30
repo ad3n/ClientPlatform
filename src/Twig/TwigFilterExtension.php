@@ -3,7 +3,7 @@
 namespace Ihsan\Client\Platform\Twig;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 class TwigFilterExtension extends \Twig_Extension
 {

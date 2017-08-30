@@ -6,7 +6,7 @@ use Ihsan\Client\Platform\Template\TemplateEngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 class TwigTemplateEngine implements TemplateEngineInterface
 {

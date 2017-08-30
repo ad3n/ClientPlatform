@@ -5,7 +5,7 @@ namespace Ihsan\Client\Platform\Api;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 trait ApiClientAwareTrait
 {

@@ -3,7 +3,7 @@
 namespace Ihsan\Client\Platform\Template;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 interface TemplateAwareInterface
 {

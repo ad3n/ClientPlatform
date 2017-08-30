@@ -8,7 +8,7 @@ use Stack\StackedHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
+ * @author Muhamad Surya Iksanudin <surya.kejawen@gmail.com>
  */
 class MiddlewareStack
 {
