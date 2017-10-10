@@ -137,10 +137,8 @@ class Client implements ClientInterface
     public function removeAll()
     {
         $sessions = $this->session->all();
-        foreach ($sessions as $session) {
-            if ($session && (is_int($session) || is_string($session))) {
-                $this->session->remove($session);
-            }
+        foreach ($sessions as $key => $session) {
+            $this->session->remove($key);
         }
     }
 
