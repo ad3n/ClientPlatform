@@ -22,6 +22,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -193,8 +194,11 @@ abstract class Bootstrap extends Container
             );
         };
 
-        $this['internal.session_storage'] = function () {
-            return new Session();
+        $this['internal.session_storage'] = function ($container) {
+            $storage = new NativeSessionStorage();
+            $storage->setOptions(['cookie_lifetime' => $container['session_lifetime']]);
+
+            return new Session($storage);
         };
     }
 

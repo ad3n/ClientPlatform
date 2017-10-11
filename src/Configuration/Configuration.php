@@ -69,6 +69,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->integerNode('session_lifetime')->defaultValue(7200)->end()
                 ->arrayNode('api')
                     ->isRequired()
                     ->cannotBeEmpty()
